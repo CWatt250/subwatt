@@ -1,18 +1,26 @@
 // SubWatt service worker
 // Bump CACHE_NAME when shipping new assets so clients pick them up
-const CACHE_NAME = 'subwatt-v2';
+const CACHE_NAME = 'subwatt-v3';
 const TILE_CACHE = 'subwatt-tiles-v1';
 const MAX_TILES = 500;
 
 const PRECACHE_URLS = [
   'index.html',
   'manifest.json',
+  'data.json',
   'icons/icon-192.png',
   'icons/icon-512.png',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
   'https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap'
 ];
+
+// Paths (relative to scope) that should use network-first instead of cache-first.
+// data.json is edited via the admin page, so we want the freshest copy whenever
+// online; fall back to cache only when the network fails.
+function isNetworkFirst(url){
+  return url.pathname.endsWith('/data.json') || url.pathname === '/data.json';
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -56,6 +64,25 @@ self.addEventListener('fetch', (event) => {
   if (req.method !== 'GET') return;
 
   const url = req.url;
+  const parsed = new URL(url);
+
+  // Network-first for editable data (admin edits should propagate on next nav)
+  if (parsed.origin === self.location.origin && isNetworkFirst(parsed)) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then(async (cache) => {
+        try {
+          const resp = await fetch(req, { cache: 'no-cache' });
+          if (resp && resp.ok) cache.put(req, resp.clone());
+          return resp;
+        } catch (err) {
+          const cached = await cache.match(req);
+          if (cached) return cached;
+          throw err;
+        }
+      })
+    );
+    return;
+  }
 
   if (isOsmTile(url)) {
     event.respondWith(

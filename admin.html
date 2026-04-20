@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex, nofollow"/>
+<title>SubWatt Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsdiff/5.2.0/diff.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a;line-height:1.5}
+a{color:#2563eb;text-decoration:none}
+a:hover{text-decoration:underline}
+code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;padding:1px 6px;border-radius:3px;color:#0f172a}
+
+/* Header */
+.hdr{background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 24px;display:flex;align-items:center;gap:16px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
+.hdr-logo{display:flex;align-items:center;gap:10px}
+.hdr-logo-mark{width:34px;height:34px;background:#fff;border:2px solid #2563eb;border-radius:8px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(37,99,235,.18)}
+.hdr-logo-mark svg{width:20px;height:20px;display:block}
+.hdr-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;line-height:1}
+.hdr-title .sub{color:#2563eb}
+.hdr-title .watt{color:#f97316}
+.hdr-tagline{font-family:'Space Mono',monospace;font-size:8px;font-weight:600;letter-spacing:1.5px;color:#64748b;text-transform:uppercase;margin-top:3px;padding-top:3px;border-top:1px solid #f97316;text-align:center}
+.hdr-badge{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;border-radius:4px;padding:3px 10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.hdr-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+
+/* Buttons */
+.btn{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;color:#374151;padding:7px 14px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn:hover{background:#e2e8f0;color:#0f172a}
+.btn.pr{background:#2563eb;border-color:#2563eb;color:#fff}
+.btn.pr:hover{background:#1d4ed8;border-color:#1d4ed8}
+.btn.pr:disabled,.btn:disabled{background:#cbd5e1;border-color:#cbd5e1;color:#fff;cursor:not-allowed}
+.btn.danger{background:#fff;border-color:#fecaca;color:#b91c1c}
+.btn.danger:hover{background:#fef2f2;border-color:#ef4444;color:#991b1b}
+.btn.small{padding:4px 10px;font-size:10px;letter-spacing:.5px}
+
+/* Login */
+.login-wrap{max-width:520px;margin:60px auto;padding:0 20px}
+.login-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:28px;box-shadow:0 4px 20px rgba(15,23,42,.06)}
+.login-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#0f172a;margin-bottom:14px}
+.login-help{font-size:13px;color:#475569;margin-bottom:18px;line-height:1.6}
+.login-help a{color:#2563eb}
+.login-input{width:100%;font-family:'Space Mono',monospace;font-size:13px;padding:10px 12px;border:1px solid #e2e8f0;border-radius:6px;outline:none;background:#f8fafc;color:#0f172a;transition:all .15s}
+.login-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.login-error{margin-top:12px;padding:10px 12px;background:#fef2f2;border:1px solid #fecaca;border-radius:6px;color:#991b1b;font-size:12px;display:none}
+.login-error.show{display:block}
+.login-actions{margin-top:14px;display:flex;justify-content:flex-end}
+
+/* App layout */
+.app{max-width:1100px;margin:0 auto;padding:24px 20px 120px}
+.app-intro{margin-bottom:20px;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.6}
+.app-intro strong{color:#1e3a8a}
+
+/* Local card */
+.lc{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:20px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04)}
+.lc-hdr{padding:14px 18px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px}
+.lc-swatch{width:6px;height:28px;border-radius:3px;flex-shrink:0}
+.lc-name{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#0f172a}
+.lc-meta{font-size:11px;color:#64748b;margin-left:8px}
+.lc-body{padding:18px}
+.lc-sec{margin-bottom:24px}
+.lc-sec:last-child{margin-bottom:0}
+.lc-sec-hdr{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#64748b;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.lc-sec-hdr .lc-sec-actions{margin-left:auto;display:flex;gap:6px}
+
+/* Textarea (rates) */
+.rates-ta{width:100%;min-height:320px;font-family:'Space Mono',monospace;font-size:11.5px;line-height:1.55;padding:12px 14px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#0f172a;resize:vertical;outline:none;tab-size:2;-moz-tab-size:2;transition:border-color .15s,background .15s}
+.rates-ta:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.rates-ta.invalid{border-color:#ef4444;background:#fef2f2}
+.rates-msg{margin-top:8px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.5;padding:8px 10px;border-radius:4px;display:none;white-space:pre-wrap}
+.rates-msg.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
+.rates-msg.warn{display:block;background:#fffbeb;color:#92400e;border:1px solid #fde68a}
+.rates-msg.ok{display:block;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+
+/* Dispatch table */
+.dp-table{width:100%;border-collapse:collapse}
+.dp-table th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;font-weight:400;padding:6px 8px;text-align:left;border-bottom:1px solid #e2e8f0}
+.dp-table td{padding:6px 4px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.dp-table input{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;outline:none;transition:all .15s}
+.dp-table input:focus{border-color:#2563eb;background:#fff}
+.dp-table input.invalid{border-color:#ef4444;background:#fef2f2}
+.dp-table input.lat,.dp-table input.lng{font-family:'Space Mono',monospace;font-size:11.5px}
+.dp-table td.col-name{width:40%}
+.dp-table td.col-lat,.dp-table td.col-lng{width:22%}
+.dp-table td.col-del{width:16%;text-align:right}
+.dp-add-btn{margin-top:10px}
+
+/* Bottom bar */
+.bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;padding:12px 24px;box-shadow:0 -4px 16px rgba(15,23,42,.08);display:flex;align-items:center;gap:12px;z-index:100}
+.bottom-status{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#64748b}
+.bottom-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#94a3b8;margin-right:8px;vertical-align:2px}
+.bottom-status.dirty .dot{background:#f59e0b;box-shadow:0 0 6px #f59e0b88}
+.bottom-actions{margin-left:auto;display:flex;gap:10px}
+
+/* Diff view */
+.diff-wrap{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:20px;overflow:hidden;display:none}
+.diff-wrap.show{display:block}
+.diff-hdr{padding:12px 16px;border-bottom:1px solid #f1f5f9;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#64748b;text-transform:uppercase;display:flex;align-items:center}
+.diff-hdr .close-diff{margin-left:auto;cursor:pointer;color:#94a3b8;background:none;border:none;font-size:18px;line-height:1;padding:2px 6px}
+.diff-body{font-family:'Space Mono',monospace;font-size:11.5px;line-height:1.55;padding:14px 18px;max-height:50vh;overflow:auto;background:#f8fafc}
+.diff-line{padding:0 6px;border-radius:2px;white-space:pre-wrap;word-break:break-word}
+.diff-line.add{background:#ecfdf5;color:#065f46}
+.diff-line.add::before{content:'+ ';color:#10b981;font-weight:700}
+.diff-line.rem{background:#fef2f2;color:#991b1b}
+.diff-line.rem::before{content:'- ';color:#ef4444;font-weight:700}
+.diff-line.ctx{color:#64748b}
+.diff-line.ctx::before{content:'  '}
+.diff-empty{padding:20px;text-align:center;color:#94a3b8;font-style:italic;font-size:12px;font-family:'DM Sans',sans-serif}
+
+/* Modal */
+.modal-wrap{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.modal-wrap.show{display:flex}
+.modal{background:#fff;border-radius:10px;max-width:540px;width:100%;padding:24px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;color:#0f172a;margin-bottom:10px}
+.modal-body{font-size:13px;color:#475569;margin-bottom:14px;line-height:1.55}
+.modal-input-label{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px;margin-top:12px}
+.modal-input{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 10px;border:1px solid #e2e8f0;border-radius:4px;outline:none}
+.modal-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+
+/* Toast */
+.toast{position:fixed;bottom:80px;right:24px;background:#1e293b;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:2000;display:none;max-width:380px;line-height:1.4}
+.toast.show{display:block}
+.toast.success{background:#065f46}
+.toast.error{background:#991b1b}
+
+.hidden{display:none!important}
+.loading{padding:40px;text-align:center;color:#94a3b8;font-size:13px}
+.load-error{padding:16px 18px;color:#991b1b;background:#fef2f2;border:1px solid #fecaca;border-radius:8px;font-size:13px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div id="login-screen">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-title">SubWatt Admin</div>
+      <div class="login-help">
+        Create a fine-grained personal access token at
+        <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener noreferrer">github.com/settings/personal-access-tokens/new</a>.
+        Scope to the <code>CWatt250/subwatt</code> repo <strong>ONLY</strong>,
+        permission: <strong>Contents &rarr; Read and write</strong>.
+        Paste below. The token stays in this browser tab and clears when you close it.
+      </div>
+      <form id="login-form">
+        <input id="pat-input" class="login-input" type="password" placeholder="github_pat_..." autocomplete="off" autofocus/>
+        <div id="login-error" class="login-error"></div>
+        <div class="login-actions">
+          <button type="submit" class="btn pr" id="login-submit">Sign in</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- APP SCREEN -->
+<div id="app-screen" class="hidden">
+  <div class="hdr">
+    <div class="hdr-logo">
+      <div class="hdr-logo-mark">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M13.5 2 L5 13.5 H11 L10 22 L19 9 H13 Z" fill="#f97316" stroke="#2563eb" stroke-width="1.2" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="hdr-title"><span class="sub">SUB</span><span class="watt">WATT</span></div>
+        <div class="hdr-tagline">Admin Console</div>
+      </div>
+    </div>
+    <div class="hdr-badge">Editing live data</div>
+    <div class="hdr-actions">
+      <button id="sign-out-btn" class="btn">Sign out</button>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="app-intro">
+      Edit rate data for each local below. <strong>Dispatches</strong> use the structured table;
+      everything else in each local's sub-tree is edited as JSON. Hit <strong>Preview changes</strong>
+      to see a unified diff, then <strong>Publish</strong> to commit to <code>main</code>.
+      GitHub Pages rebuilds in ~60 seconds; users get the new data on their next page load
+      (service worker uses network-first for <code>data.json</code>).
+    </div>
+
+    <div id="editor-body"><div class="loading">Loading data.json…</div></div>
+
+    <div id="diff-view" class="diff-wrap">
+      <div class="diff-hdr">
+        <span>Unified diff (before &rarr; after)</span>
+        <button class="close-diff" id="close-diff-btn" aria-label="Close">&times;</button>
+      </div>
+      <div class="diff-body" id="diff-body"></div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div id="bottom-status" class="bottom-status"><span class="dot"></span><span id="bottom-status-text">No changes</span></div>
+    <div class="bottom-actions">
+      <button id="preview-btn" class="btn" disabled>Preview changes</button>
+      <button id="publish-btn" class="btn pr" disabled>Publish to live site</button>
+    </div>
+  </div>
+</div>
+
+<!-- PUBLISH MODAL -->
+<div id="publish-modal" class="modal-wrap">
+  <div class="modal">
+    <div class="modal-title">Publish to live site</div>
+    <div class="modal-body">
+      This will update the live SubWatt site in ~60 seconds. Anyone using the app will get the new data on their next page load. Continue?
+    </div>
+    <label class="modal-input-label" for="commit-msg-input">Commit message</label>
+    <input id="commit-msg-input" class="modal-input" type="text"/>
+    <div class="modal-actions">
+      <button id="publish-cancel" class="btn">Cancel</button>
+      <button id="publish-confirm" class="btn pr">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFLICT MODAL -->
+<div id="conflict-modal" class="modal-wrap">
+  <div class="modal">
+    <div class="modal-title">Someone else updated data.json</div>
+    <div class="modal-body">
+      Someone else updated <code>data.json</code> since you started editing.
+      Reload to get the latest version &mdash; <strong>your local edits will be lost.</strong>
+    </div>
+    <div class="modal-actions">
+      <button id="conflict-cancel" class="btn">Keep editing</button>
+      <button id="conflict-reload" class="btn pr">Reload</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script>
+'use strict';
+
+// ========== Constants ==========
+var REPO = 'CWatt250/subwatt';
+var DATA_PATH = 'data.json';
+var API = 'https://api.github.com';
+var PAT_KEY = 'subwatt_pat';
+
+// ========== State ==========
+var PAT = null;           // in-memory + sessionStorage
+var DATA = null;          // editor state (mutable)
+var ORIGINAL = null;      // last-fetched baseline for diff
+var CURRENT_SHA = null;   // GitHub blob sha for optimistic locking
+
+// ========== DOM helpers ==========
+function $(id){ return document.getElementById(id); }
+var loginScreen = $('login-screen');
+var appScreen = $('app-screen');
+var loginForm = $('login-form');
+var patInput = $('pat-input');
+var loginError = $('login-error');
+var loginSubmit = $('login-submit');
+var editorBody = $('editor-body');
+var previewBtn = $('preview-btn');
+var publishBtn = $('publish-btn');
+var diffView = $('diff-view');
+var diffBody = $('diff-body');
+var bottomStatus = $('bottom-status');
+var bottomStatusText = $('bottom-status-text');
+var signOutBtn = $('sign-out-btn');
+var publishModal = $('publish-modal');
+var commitMsgInput = $('commit-msg-input');
+var conflictModal = $('conflict-modal');
+var toast = $('toast');
+
+function showToast(msg, kind){
+  toast.className = 'toast show' + (kind ? ' ' + kind : '');
+  toast.textContent = msg;
+  setTimeout(function(){ toast.classList.remove('show'); }, kind === 'error' ? 7000 : 4000);
+}
+
+// Base64 that handles non-ASCII (e.g. en-dashes in CBA strings, em-dashes in notes)
+function b64encode(str){
+  return btoa(String.fromCharCode.apply(null, new TextEncoder().encode(str)));
+}
+function b64decode(str){
+  var bin = atob(str);
+  var bytes = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+function escapeAttr(s){
+  return String(s).replace(/[&"<>]/g, function(c){
+    return { '&':'&amp;', '"':'&quot;', '<':'&lt;', '>':'&gt;' }[c];
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>]/g, function(c){
+    return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c];
+  });
+}
+
+// ========== API ==========
+// Requests go only to api.github.com with the PAT in the Authorization header.
+// The PAT is NEVER logged, sent to any other origin, or embedded in URLs.
+function apiRequest(path, opts){
+  opts = opts || {};
+  var headers = Object.assign({}, opts.headers || {}, {
+    'Authorization': 'Bearer ' + PAT,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  });
+  var fetchOpts = Object.assign({}, opts, { headers: headers });
+  delete fetchOpts.headers;
+  fetchOpts.headers = headers;
+  return fetch(API + path, fetchOpts).then(function(res){
+    return res.json().catch(function(){ return null; }).then(function(body){
+      return { status: res.status, ok: res.ok, body: body };
+    });
+  });
+}
+
+// ========== Auth ==========
+function validatePAT(token){
+  return fetch(API + '/repos/' + REPO, {
+    headers: {
+      'Authorization': 'Bearer ' + token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+    },
+  }).then(function(res){
+    if (res.status === 200) return { ok: true };
+    if (res.status === 401) return { ok: false, msg: 'Token rejected.' };
+    return res.json().catch(function(){ return null; }).then(function(body){
+      return { ok: false, msg: (body && body.message) || ('HTTP ' + res.status) };
+    });
+  }).catch(function(err){
+    return { ok: false, msg: 'Network error: ' + err.message };
+  });
+}
+
+loginForm.addEventListener('submit', function(e){
+  e.preventDefault();
+  var token = patInput.value.trim();
+  if (!token){
+    loginError.textContent = 'Paste a PAT to continue.';
+    loginError.classList.add('show');
+    return;
+  }
+  loginError.classList.remove('show');
+  loginSubmit.disabled = true;
+  loginSubmit.textContent = 'Validating…';
+  validatePAT(token).then(function(r){
+    loginSubmit.disabled = false;
+    loginSubmit.textContent = 'Sign in';
+    if (!r.ok){
+      loginError.textContent = r.msg;
+      loginError.classList.add('show');
+      return;
+    }
+    sessionStorage.setItem(PAT_KEY, token);
+    PAT = token;
+    patInput.value = '';
+    enterApp();
+  });
+});
+
+signOutBtn.addEventListener('click', function(){
+  sessionStorage.removeItem(PAT_KEY);
+  PAT = null;
+  DATA = null; ORIGINAL = null; CURRENT_SHA = null;
+  appScreen.classList.add('hidden');
+  loginScreen.classList.remove('hidden');
+  editorBody.innerHTML = '<div class="loading">Loading data.json…</div>';
+  diffView.classList.remove('show');
+  loginError.classList.remove('show');
+});
+
+// ========== App bootstrap ==========
+function enterApp(){
+  loginScreen.classList.add('hidden');
+  appScreen.classList.remove('hidden');
+  editorBody.innerHTML = '<div class="loading">Loading data.json…</div>';
+  previewBtn.disabled = true;
+  publishBtn.disabled = true;
+  fetchData().then(function(r){
+    if (!r.ok){
+      if (r.unauthorized) return;
+      editorBody.innerHTML = '<div class="load-error">Failed to load data.json: ' + escapeHtml(r.msg) + '</div>';
+      return;
+    }
+    buildEditor();
+    updateDirtyStatus();
+  });
+}
+
+function fetchData(){
+  return apiRequest('/repos/' + REPO + '/contents/' + DATA_PATH + '?ref=main', { cache: 'no-cache' }).then(function(res){
+    if (res.status === 401){ handle401(); return { ok: false, unauthorized: true }; }
+    if (!res.ok){
+      return { ok: false, msg: (res.body && res.body.message) || ('HTTP ' + res.status) };
+    }
+    CURRENT_SHA = res.body.sha;
+    var raw;
+    try {
+      raw = b64decode(res.body.content.replace(/\s/g, ''));
+    } catch (err){
+      return { ok: false, msg: 'Decode error: ' + err.message };
+    }
+    try {
+      var parsed = JSON.parse(raw);
+      DATA = JSON.parse(JSON.stringify(parsed));
+      ORIGINAL = JSON.parse(JSON.stringify(parsed));
+      return { ok: true };
+    } catch (err){
+      return { ok: false, msg: 'data.json is not valid JSON: ' + err.message };
+    }
+  });
+}
+
+function handle401(){
+  sessionStorage.removeItem(PAT_KEY);
+  PAT = null;
+  DATA = null; ORIGINAL = null; CURRENT_SHA = null;
+  appScreen.classList.add('hidden');
+  loginScreen.classList.remove('hidden');
+  loginError.textContent = 'Token expired or revoked.';
+  loginError.classList.add('show');
+}
+
+// ========== Editor ==========
+var LOCAL_ORDER = ['82', '7', '36'];
+
+function buildEditor(){
+  editorBody.innerHTML = '';
+  LOCAL_ORDER.forEach(function(id){
+    var local = DATA.locals[id];
+    if (!local) return;
+    editorBody.appendChild(buildLocalCard(id, local));
+  });
+  previewBtn.disabled = false;
+}
+
+function buildLocalCard(id, local){
+  var card = document.createElement('div');
+  card.className = 'lc';
+  card.setAttribute('data-local-id', id);
+  card.innerHTML =
+    '<div class="lc-hdr">' +
+      '<div class="lc-swatch" style="background:' + escapeAttr(local.color || '#94a3b8') + '"></div>' +
+      '<div class="lc-name">' + escapeHtml(local.name || ('Local ' + id)) + '</div>' +
+      '<div class="lc-meta">' + escapeHtml(local.hallCity || '') + '</div>' +
+    '</div>' +
+    '<div class="lc-body">' +
+      '<div class="lc-sec">' +
+        '<div class="lc-sec-hdr">' +
+          '<span>Rates &amp; zones (JSON)</span>' +
+          '<span class="lc-sec-actions">' +
+            '<button class="btn small format-rates-btn">Format</button>' +
+          '</span>' +
+        '</div>' +
+        '<textarea class="rates-ta" spellcheck="false"></textarea>' +
+        '<div class="rates-msg"></div>' +
+      '</div>' +
+      '<div class="lc-sec">' +
+        '<div class="lc-sec-hdr"><span>Dispatches</span></div>' +
+        '<table class="dp-table"><thead><tr>' +
+          '<th>Name</th><th>Lat</th><th>Lng</th><th></th>' +
+        '</tr></thead><tbody class="dp-body"></tbody></table>' +
+        '<button class="btn small dp-add-btn">+ Add dispatch</button>' +
+      '</div>' +
+    '</div>';
+
+  var ta = card.querySelector('.rates-ta');
+  var ratesMsg = card.querySelector('.rates-msg');
+  var ratesSubtree = Object.assign({}, local);
+  delete ratesSubtree.dispatches;
+  ta.value = JSON.stringify(ratesSubtree, null, 2);
+
+  card.querySelector('.format-rates-btn').addEventListener('click', function(){
+    try {
+      var parsed = JSON.parse(ta.value);
+      ta.value = JSON.stringify(parsed, null, 2);
+      ta.classList.remove('invalid');
+      ratesMsg.className = 'rates-msg ok';
+      ratesMsg.textContent = 'Formatted.';
+      setTimeout(function(){ if (ratesMsg.classList.contains('ok')){ ratesMsg.className = 'rates-msg'; ratesMsg.textContent = ''; } }, 1500);
+      syncRatesToData(card, id);
+      updateDirtyStatus();
+    } catch (err){
+      ta.classList.add('invalid');
+      ratesMsg.className = 'rates-msg error';
+      ratesMsg.textContent = 'Cannot format — invalid JSON: ' + err.message;
+    }
+  });
+
+  ta.addEventListener('input', function(){
+    try {
+      JSON.parse(ta.value);
+      ta.classList.remove('invalid');
+      ratesMsg.className = 'rates-msg';
+      ratesMsg.textContent = '';
+      syncRatesToData(card, id);
+    } catch (err){
+      ta.classList.add('invalid');
+      ratesMsg.className = 'rates-msg error';
+      ratesMsg.textContent = 'JSON parse error: ' + err.message;
+    }
+    updateDirtyStatus();
+  });
+  ta.addEventListener('blur', function(){ validateRatesOnBlur(card, id); });
+
+  var body = card.querySelector('.dp-body');
+  (local.dispatches || []).forEach(function(dp){ body.appendChild(buildDispatchRow(dp)); });
+
+  card.querySelector('.dp-add-btn').addEventListener('click', function(){
+    body.appendChild(buildDispatchRow({ name: '', lat: 0, lng: 0 }));
+    syncDispatchesToData(card, id);
+    validateDispatchRows(body);
+    updateDirtyStatus();
+  });
+
+  body.addEventListener('input', function(){
+    validateDispatchRows(body);
+    syncDispatchesToData(card, id);
+    updateDirtyStatus();
+  });
+  body.addEventListener('click', function(e){
+    if (e.target.classList.contains('dp-del-btn')){
+      e.target.closest('tr').remove();
+      syncDispatchesToData(card, id);
+      validateDispatchRows(body);
+      updateDirtyStatus();
+    }
+  });
+
+  return card;
+}
+
+function buildDispatchRow(dp){
+  var tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td class="col-name"><input class="name" type="text" value="' + escapeAttr(dp.name == null ? '' : dp.name) + '" placeholder="City, ST"/></td>' +
+    '<td class="col-lat"><input class="lat" type="number" step="0.0001" value="' + (dp.lat == null ? '' : dp.lat) + '"/></td>' +
+    '<td class="col-lng"><input class="lng" type="number" step="0.0001" value="' + (dp.lng == null ? '' : dp.lng) + '"/></td>' +
+    '<td class="col-del"><button class="btn small danger dp-del-btn">Delete</button></td>';
+  return tr;
+}
+
+// ========== Validation ==========
+function validateRatesOnBlur(card, localId){
+  var ta = card.querySelector('.rates-ta');
+  var msg = card.querySelector('.rates-msg');
+  var parsed;
+  try {
+    parsed = JSON.parse(ta.value);
+  } catch (err){
+    ta.classList.add('invalid');
+    msg.className = 'rates-msg error';
+    msg.textContent = 'JSON parse error: ' + err.message;
+    return false;
+  }
+  var problems = [];
+  function checkZone(z, i, ctx, needCv){
+    if (z.maxMi !== null && typeof z.maxMi !== 'number') problems.push(ctx + 'zone[' + i + '].maxMi must be a number or null');
+    if (typeof z.amount !== 'number') problems.push(ctx + 'zone[' + i + '].amount must be a number');
+    if (typeof z.calcLabel !== 'string') problems.push(ctx + 'zone[' + i + '].calcLabel must be a string');
+    if (typeof z.calcNote !== 'string') problems.push(ctx + 'zone[' + i + '].calcNote must be a string');
+    if (needCv && typeof z.cvAmount !== 'number') problems.push(ctx + 'zone[' + i + '].cvAmount must be a number');
+  }
+  if (!Array.isArray(parsed.travelZones)){
+    problems.push('travelZones must be an array');
+  } else {
+    parsed.travelZones.forEach(function(z, i){ checkZone(z, i, '', localId === '36'); });
+  }
+  if (localId === '7'){
+    if (!parsed.mileageCalc || typeof parsed.mileageCalc !== 'object') problems.push('mileageCalc must be an object');
+    if (!parsed.appendixA || typeof parsed.appendixA !== 'object') problems.push('appendixA must be an object');
+    else if (!Array.isArray(parsed.appendixA.zones)) problems.push('appendixA.zones must be an array');
+    else parsed.appendixA.zones.forEach(function(z, i){ checkZone(z, i, 'appendixA.', false); });
+  }
+  if (problems.length){
+    ta.classList.remove('invalid');
+    msg.className = 'rates-msg warn';
+    msg.textContent = 'Schema warnings:\n  • ' + problems.join('\n  • ');
+    return false;
+  }
+  ta.classList.remove('invalid');
+  msg.className = 'rates-msg';
+  msg.textContent = '';
+  return true;
+}
+
+function validateDispatchRows(body){
+  body.querySelectorAll('tr').forEach(function(row){
+    var n = row.querySelector('.name');
+    var la = row.querySelector('.lat');
+    var ln = row.querySelector('.lng');
+    n.classList.toggle('invalid', !n.value.trim());
+    var laN = parseFloat(la.value), lnN = parseFloat(ln.value);
+    la.classList.toggle('invalid', !(laN >= -90 && laN <= 90));
+    ln.classList.toggle('invalid', !(lnN >= -180 && lnN <= 180));
+  });
+}
+
+// ========== Sync ==========
+function syncRatesToData(card, localId){
+  var ta = card.querySelector('.rates-ta');
+  var parsed;
+  try { parsed = JSON.parse(ta.value); } catch (_) { return; }
+  var existing = DATA.locals[localId] || {};
+  var dispatches = existing.dispatches || [];
+  // Preserve ORIGINAL key order so an unrelated rate edit doesn't move
+  // `dispatches` around and create noise lines in the diff view.
+  var reference = (ORIGINAL && ORIGINAL.locals && ORIGINAL.locals[localId]) || parsed;
+  var rebuilt = {};
+  Object.keys(reference).forEach(function(k){
+    if (k === 'dispatches') rebuilt.dispatches = dispatches;
+    else if (k in parsed) rebuilt[k] = parsed[k];
+  });
+  // New keys the admin added that aren't in the reference go at the end
+  Object.keys(parsed).forEach(function(k){
+    if (!(k in rebuilt)) rebuilt[k] = parsed[k];
+  });
+  if (!('dispatches' in rebuilt)) rebuilt.dispatches = dispatches;
+  DATA.locals[localId] = rebuilt;
+}
+
+function syncDispatchesToData(card, localId){
+  var rows = Array.from(card.querySelectorAll('.dp-body tr'));
+  var list = rows.map(function(r){
+    return {
+      name: r.querySelector('.name').value.trim(),
+      lat: parseFloat(r.querySelector('.lat').value),
+      lng: parseFloat(r.querySelector('.lng').value),
+    };
+  });
+  if (!DATA.locals[localId]) DATA.locals[localId] = {};
+  DATA.locals[localId].dispatches = list;
+}
+
+// ========== Dirty tracking ==========
+function isDirty(){
+  if (!DATA || !ORIGINAL) return false;
+  return JSON.stringify(DATA) !== JSON.stringify(ORIGINAL);
+}
+function updateDirtyStatus(){
+  var dirty = isDirty();
+  bottomStatus.classList.toggle('dirty', dirty);
+  bottomStatusText.textContent = dirty ? 'Unsaved changes' : 'No changes';
+  publishBtn.disabled = !dirty;
+}
+
+window.addEventListener('beforeunload', function(e){
+  if (PAT && isDirty()){
+    e.preventDefault();
+    e.returnValue = '';
+    return '';
+  }
+});
+
+// ========== Diff preview ==========
+previewBtn.addEventListener('click', function(){
+  if (!DATA || !ORIGINAL) return;
+  var before = JSON.stringify(ORIGINAL, null, 2);
+  var after = JSON.stringify(DATA, null, 2);
+  diffBody.innerHTML = '';
+  if (before === after){
+    diffBody.innerHTML = '<div class="diff-empty">No changes to preview.</div>';
+    diffView.classList.add('show');
+    publishBtn.disabled = true;
+    return;
+  }
+  if (typeof Diff === 'undefined' || !Diff.diffLines){
+    diffBody.innerHTML = '<div class="diff-empty">Diff library failed to load. Check your network and refresh.</div>';
+    diffView.classList.add('show');
+    return;
+  }
+  var parts = Diff.diffLines(before, after);
+  var frag = document.createDocumentFragment();
+  parts.forEach(function(part){
+    var cls = part.added ? 'add' : part.removed ? 'rem' : 'ctx';
+    var lines = part.value.split('\n');
+    if (lines.length && lines[lines.length - 1] === '') lines.pop();
+    lines.forEach(function(ln){
+      var div = document.createElement('div');
+      div.className = 'diff-line ' + cls;
+      div.textContent = ln;
+      frag.appendChild(div);
+    });
+  });
+  diffBody.appendChild(frag);
+  diffView.classList.add('show');
+  diffView.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+$('close-diff-btn').addEventListener('click', function(){ diffView.classList.remove('show'); });
+
+// ========== Publish ==========
+publishBtn.addEventListener('click', function(){
+  commitMsgInput.value = 'chore: update data.json via admin UI — ' + new Date().toISOString();
+  publishModal.classList.add('show');
+  setTimeout(function(){ commitMsgInput.focus(); commitMsgInput.select(); }, 50);
+});
+$('publish-cancel').addEventListener('click', function(){ publishModal.classList.remove('show'); });
+
+$('publish-confirm').addEventListener('click', function(){
+  var msg = commitMsgInput.value.trim();
+  if (!msg) msg = 'chore: update data.json via admin UI — ' + new Date().toISOString();
+  var btn = $('publish-confirm');
+  btn.disabled = true; btn.textContent = 'Publishing…';
+  var content = JSON.stringify(DATA, null, 2) + '\n';
+  apiRequest('/repos/' + REPO + '/contents/' + DATA_PATH, {
+    method: 'PUT',
+    body: JSON.stringify({
+      message: msg,
+      content: b64encode(content),
+      sha: CURRENT_SHA,
+      branch: 'main',
+    }),
+  }).then(function(res){
+    btn.disabled = false; btn.textContent = 'Publish';
+    if (res.status === 200 || res.status === 201){
+      publishModal.classList.remove('show');
+      showToast('Published — live site updates in ~60 seconds.', 'success');
+      fetchData().then(function(f){
+        if (f.ok){
+          buildEditor();
+          updateDirtyStatus();
+          diffView.classList.remove('show');
+        }
+      });
+      return;
+    }
+    if (res.status === 409 || (res.status === 422 && res.body && res.body.message && /sha|is at/i.test(res.body.message))){
+      publishModal.classList.remove('show');
+      conflictModal.classList.add('show');
+      return;
+    }
+    if (res.status === 401){
+      publishModal.classList.remove('show');
+      handle401();
+      return;
+    }
+    var em = (res.body && res.body.message) ? res.body.message : ('HTTP ' + res.status);
+    showToast('Publish failed: ' + em, 'error');
+  });
+});
+
+$('conflict-cancel').addEventListener('click', function(){ conflictModal.classList.remove('show'); });
+$('conflict-reload').addEventListener('click', function(){ location.reload(); });
+
+// ========== Boot ==========
+(function boot(){
+  PAT = sessionStorage.getItem(PAT_KEY);
+  if (PAT){
+    loginScreen.classList.add('hidden');
+    appScreen.classList.remove('hidden');
+    enterApp();
+  }
+})();
+</script>
+</body>
+</html>

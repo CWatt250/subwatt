@@ -1,7 +1,17 @@
 # SubWatt
-HFIAW Western Jurisdiction Estimator — PWA
 
-## Deploy to GitHub Pages
-1. Push to GitHub repo: CWatt250/subwatt
-2. Go to Settings → Pages → Source: main branch, root folder
-3. App will be live at: https://cwatt250.github.io/subwatt/
+HFIAW Western Jurisdiction travel rate estimator. Installable PWA.
+
+Live: https://cwatt250.github.io/subwatt/
+
+## Deploy
+
+Hosted on GitHub Pages (main branch, root). Any push to `main` rebuilds the site.
+
+```
+git add .
+git commit -m "..."
+git push
+```
+
+The service worker caches the app shell and OSM tiles (capped at 500 tiles, oldest evicted first). When you ship asset changes, bump `CACHE_NAME` in `sw.js` so clients pick up the new build.

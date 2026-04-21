@@ -38,6 +38,9 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 .btn.small{padding:4px 10px;font-size:10px;letter-spacing:.5px}
 .btn.ghost{background:transparent;border-color:transparent;color:#64748b}
 .btn.ghost:hover{background:#f1f5f9;color:#0f172a}
+.btn.outline{background:#fff;border-color:#cbd5e1;color:#64748b}
+.btn.outline:hover{background:#f8fafc;border-color:#94a3b8;color:#0f172a}
+.btn.outline:disabled{background:#fff;border-color:#e2e8f0;color:#cbd5e1;cursor:not-allowed}
 
 /* Login */
 .login-wrap{max-width:520px;margin:60px auto;padding:0 20px}
@@ -238,6 +241,7 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
   <div class="bottom-bar">
     <div id="bottom-status" class="bottom-status"><span class="dot"></span><span id="bottom-status-text">No changes</span></div>
     <div class="bottom-actions">
+      <button id="discard-btn" class="btn outline" disabled title="No changes to discard.">Discard changes</button>
       <button id="preview-btn" class="btn" disabled>Preview changes</button>
       <button id="publish-btn" class="btn pr" disabled>Publish to live site</button>
     </div>
@@ -256,6 +260,20 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
     <div class="modal-actions">
       <button id="publish-cancel" class="btn">Cancel</button>
       <button id="publish-confirm" class="btn pr">Publish</button>
+    </div>
+  </div>
+</div>
+
+<!-- DISCARD MODAL -->
+<div id="discard-modal" class="modal-wrap">
+  <div class="modal">
+    <div class="modal-title">Discard changes</div>
+    <div class="modal-body">
+      Discard all unsaved changes? This cannot be undone.
+    </div>
+    <div class="modal-actions">
+      <button id="discard-cancel" class="btn">Keep editing</button>
+      <button id="discard-confirm" class="btn danger">Discard changes</button>
     </div>
   </div>
 </div>
@@ -340,6 +358,8 @@ var loginSubmit = $('login-submit');
 var editorBody = $('editor-body');
 var previewBtn = $('preview-btn');
 var publishBtn = $('publish-btn');
+var discardBtn = $('discard-btn');
+var discardModal = $('discard-modal');
 var diffView = $('diff-view');
 var diffBody = $('diff-body');
 var bottomStatus = $('bottom-status');
@@ -1528,6 +1548,8 @@ function updateDirtyStatus(){
   } else {
     publishBtn.title = '';
   }
+  discardBtn.disabled = !dirty;
+  discardBtn.title = dirty ? '' : 'No changes to discard.';
 }
 
 // Any input across the editor body triggers a status refresh in case validation
@@ -1732,6 +1754,24 @@ $('publish-confirm').addEventListener('click', function(){
 
 $('conflict-cancel').addEventListener('click', function(){ conflictModal.classList.remove('show'); });
 $('conflict-reload').addEventListener('click', function(){ location.reload(); });
+
+// ========== Discard changes ==========
+discardBtn.addEventListener('click', function(){
+  if (!isDirty()) return;
+  discardModal.classList.add('show');
+});
+$('discard-cancel').addEventListener('click', function(){
+  discardModal.classList.remove('show');
+});
+$('discard-confirm').addEventListener('click', function(){
+  // Deep-copy ORIGINAL back over DATA — never share references so future edits
+  // don't mutate the baseline.
+  DATA = JSON.parse(JSON.stringify(ORIGINAL));
+  diffView.classList.remove('show');
+  buildEditor();
+  discardModal.classList.remove('show');
+  showToast('Discarded all unsaved changes.');
+});
 
 // ========== Boot ==========
 (function boot(){

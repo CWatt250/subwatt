@@ -406,8 +406,14 @@ function sr(local,cn,lid){
         +'</div>'
       +'</div>';
   }
+  // #calc-out (rate panel) is rendered at the TOP of the result card so the
+  // dollar figure — the number field users actually open this tool to get —
+  // sits immediately below the Jurisdictions list, above the county and
+  // jurisdiction context cards. updateCost() fills it when a dispatch is
+  // selected; when empty it's a zero-height no-op.
   rc.innerHTML=
-    '<div class="rch">'
+    '<div id="calc-out"></div>'
+    +'<div class="rch">'
       +hanfordBanner
       +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;padding:10px 12px;'
         +'background:'+local.color+'12;border:1.5px solid '+local.color+'40;border-radius:8px">'
@@ -726,8 +732,8 @@ function initCalc(){
     +'</div>'
     +'<div id="calc-hint" style="font-size:9px;color:#94a3b8;margin-top:2px">'
       +(LAST_ROUTE_MILES!==null?'Auto-populated from road route \u2014 edit if needed':'Straight-line estimate \u2014 route calculating...')
-    +'</div>'
-    +'<div id="calc-out"></div>';
+    +'</div>';
+  // Rate panel (#calc-out) lives at the top of #rc — not inside this section.
 
   var firstSec=rc.querySelector('.rcsec:not([data-calc])');
   rc.insertBefore(sec,firstSec||rc.querySelector('.disc'));
@@ -736,37 +742,51 @@ function initCalc(){
 
 // ── Dispatch Zone Rings ───────────────────────────────────────────────────────
 var dispatchLGs={};
-var ZONE_RINGS={
-  82:[
-    {mi:30,label:'Zone 1\u20132 \u00b7 Free',color:'#2ecc71'},
-    {mi:40,label:'Zone 3 \u00b7 $30/day',color:'#a8d840'},
-    {mi:50,label:'Zone 4 \u00b7 $40/day',color:'#f5c842'},
-    {mi:60,label:'Zone 5 \u00b7 $55/day',color:'#f09020'},
-    {mi:70,label:'Zone 6 \u00b7 $65/day',color:'#e06030'},
-    {mi:100,label:'Zone 6+ \u00b7 $140/day',color:'#b91c1c',sub:true}
-  ],
-  '7s':[
+// Ring visual metadata: colors, which index is the "subsistence" outermost
+// ring, and a fallback radius for the terminal (maxMi:null) zone. Ring LABELS
+// are computed from zone.amount at render time — the hardcoded label table
+// that used to live here drifted when admins edited amounts through the
+// structured form, because rate strings like "$140/day subs" don't survive
+// auto-sync. amount is the canonical number.
+var ZONE_RING_META={
+  82:{colors:['#2ecc71','#a8d840','#f5c842','#f09020','#e06030','#b91c1c'],subIdx:5,tailMi:100},
+  '7a':{colors:['#2ecc71','#90d840','#f5c842','#f09020','#e07030','#e04040','#b91c1c'],subIdx:6,tailMi:100},
+  36:{colors:['#2ecc71','#f5c842','#f09020','#e06030','#b91c1c'],subIdx:4,tailMi:140}
+};
+function fmtRingRatePart(z){
+  if(z.amount===0||(z.amount==null&&z.label&&/free/i.test(z.label)))return 'Free';
+  if(/Per Diem/i.test(z.rate||''))return 'Per Diem ($'+z.amount+')';
+  return '$'+z.amount+'/day';
+}
+function buildRingsFromZones(zones,meta){
+  return zones.map(function(z,i){
+    var mi=z.maxMi!=null?z.maxMi:(meta.tailMi||100);
+    var zonePart=z.label||'Zone '+(i+1);
+    return{
+      mi:mi,
+      label:zonePart+' \u00b7 '+fmtRingRatePart(z),
+      color:meta.colors[i]||'#64748b',
+      sub:meta.subIdx===i||undefined
+    };
+  });
+}
+function getZoneRings(lid,isA){
+  if(lid===82&&LOCALS[82]&&LOCALS[82].travelZones)
+    return buildRingsFromZones(LOCALS[82].travelZones,ZONE_RING_META[82]);
+  if(lid===36&&LOCALS[36]&&LOCALS[36].travelZones)
+    return buildRingsFromZones(LOCALS[36].travelZones,ZONE_RING_META[36]);
+  if(lid===7&&isA&&LOCALS[7]&&LOCALS[7].appendixA&&LOCALS[7].appendixA.zones)
+    return buildRingsFromZones(LOCALS[7].appendixA.zones,ZONE_RING_META['7a']);
+  // Local 7 standard travelZones carry no amount/maxMi. Derive the Per Diem
+  // dollar from mileageCalc.perDiemAmount, which IS a number admin can edit.
+  var mc=(LOCALS[7]&&LOCALS[7].mileageCalc)||null;
+  var pda=mc&&typeof mc.perDiemAmount==='number'?mc.perDiemAmount:150;
+  return[
     {mi:20,label:'Free Zone',color:'#2ecc71'},
     {mi:70,label:'Mileage Zone',color:'#e84040'},
-    {mi:100,label:'Per Diem \u00b7 $150/day',color:'#b91c1c',sub:true}
-  ],
-  '7a':[
-    {mi:20,label:'Zone 1 \u00b7 Free',color:'#2ecc71'},
-    {mi:30,label:'Zone 2 \u00b7 $20/day',color:'#90d840'},
-    {mi:40,label:'Zone 3 \u00b7 $30/day',color:'#f5c842'},
-    {mi:50,label:'Zone 4 \u00b7 $40/day',color:'#f09020'},
-    {mi:60,label:'Zone 5 \u00b7 $50/day',color:'#e07030'},
-    {mi:70,label:'Zone 6 \u00b7 $60/day',color:'#e04040'},
-    {mi:100,label:'Per Diem \u00b7 $150/day',color:'#b91c1c',sub:true}
-  ],
-  36:[
-    {mi:30,label:'Zone 1 \u00b7 Free',color:'#2ecc71'},
-    {mi:50,label:'Zone 2 \u00b7 $30/day',color:'#f5c842'},
-    {mi:70,label:'Zone 3 \u00b7 $65/day',color:'#f09020'},
-    {mi:100,label:'Zone 4 \u00b7 $85/day',color:'#e06030'},
-    {mi:140,label:'Zone 5 \u00b7 $160/day',color:'#b91c1c',sub:true}
-  ]
-};
+    {mi:100,label:'Per Diem \u00b7 $'+pda+'/day',color:'#b91c1c',sub:true}
+  ];
+}
 
 function clearDispatchZones(){
   Object.keys(dispatchLGs).forEach(function(k){map.removeLayer(dispatchLGs[k]);});
@@ -944,7 +964,7 @@ function setPrimaryDispatch(lid,name,lat,lng){
 
 function drawDispatchRings(lid,name,lat,lng){
   var isA=lid===7&&L7A[CUR_FIPS];
-  var rings=lid===82?ZONE_RINGS[82]:lid===36?ZONE_RINGS[36]:isA?ZONE_RINGS['7a']:ZONE_RINGS['7s'];
+  var rings=getZoneRings(lid,isA);
   var MI=1609.34,lc=LOCALS[lid]?LOCALS[lid].color:'#fff';
   var lg=L.layerGroup();
   [].concat(rings).reverse().forEach(function(r,i,arr){

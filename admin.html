@@ -36,6 +36,8 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 .btn.danger{background:#fff;border-color:#fecaca;color:#b91c1c}
 .btn.danger:hover{background:#fef2f2;border-color:#ef4444;color:#991b1b}
 .btn.small{padding:4px 10px;font-size:10px;letter-spacing:.5px}
+.btn.ghost{background:transparent;border-color:transparent;color:#64748b}
+.btn.ghost:hover{background:#f1f5f9;color:#0f172a}
 
 /* Login */
 .login-wrap{max-width:520px;margin:60px auto;padding:0 20px}
@@ -51,48 +53,71 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 
 /* App layout */
 .app{max-width:1100px;margin:0 auto;padding:24px 20px 120px}
-.app-intro{margin-bottom:20px;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.6}
+.app-intro{margin-bottom:16px;padding:14px 16px;background:#eff6ff;border:1px solid #bfdbfe;border-radius:8px;font-size:12px;color:#1e40af;line-height:1.6}
 .app-intro strong{color:#1e3a8a}
+.toolbar{margin-bottom:18px;display:flex;gap:10px;align-items:center}
 
 /* Local card */
 .lc{background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:20px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04)}
 .lc-hdr{padding:14px 18px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:12px}
 .lc-swatch{width:6px;height:28px;border-radius:3px;flex-shrink:0}
 .lc-name{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#0f172a}
-.lc-meta{font-size:11px;color:#64748b;margin-left:8px}
+.lc-meta{font-size:11px;color:#64748b;margin-left:4px}
 .lc-body{padding:18px}
 .lc-sec{margin-bottom:24px}
 .lc-sec:last-child{margin-bottom:0}
 .lc-sec-hdr{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:2px;color:#64748b;text-transform:uppercase;margin-bottom:10px;display:flex;align-items:center;gap:10px}
 .lc-sec-hdr .lc-sec-actions{margin-left:auto;display:flex;gap:6px}
 
-/* Textarea (rates) */
-.rates-ta{width:100%;min-height:320px;font-family:'Space Mono',monospace;font-size:11.5px;line-height:1.55;padding:12px 14px;border:1px solid #e2e8f0;border-radius:6px;background:#f8fafc;color:#0f172a;resize:vertical;outline:none;tab-size:2;-moz-tab-size:2;transition:border-color .15s,background .15s}
-.rates-ta:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
-.rates-ta.invalid{border-color:#ef4444;background:#fef2f2}
-.rates-msg{margin-top:8px;font-family:'Space Mono',monospace;font-size:11px;line-height:1.5;padding:8px 10px;border-radius:4px;display:none;white-space:pre-wrap}
-.rates-msg.error{display:block;background:#fef2f2;color:#991b1b;border:1px solid #fecaca}
-.rates-msg.warn{display:block;background:#fffbeb;color:#92400e;border:1px solid #fde68a}
-.rates-msg.ok{display:block;background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0}
+/* Info grid */
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 14px}
+.info-field{display:flex;flex-direction:column;min-width:0}
+.info-field.wide{grid-column:1 / -1}
+.info-field label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:4px}
+.info-field input,.info-field textarea,.info-field select{font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;outline:none;transition:all .15s;width:100%}
+.info-field input:focus,.info-field textarea:focus,.info-field select:focus{border-color:#2563eb;background:#fff}
+.info-field input.invalid,.info-field textarea.invalid{border-color:#ef4444;background:#fef2f2}
+.info-field textarea{resize:vertical;min-height:58px;line-height:1.5}
+.info-field input[type="number"]{font-family:'Space Mono',monospace;font-size:11.5px}
+.color-combo{display:flex;gap:6px;align-items:center}
+.color-combo input[type="color"]{width:40px;height:32px;padding:2px;cursor:pointer;flex-shrink:0;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc}
+.color-combo input[type="text"]{flex:1;font-family:'Space Mono',monospace;font-size:11.5px}
+.field-error{font-size:10.5px;color:#991b1b;margin-top:3px;font-family:'Space Mono',monospace;line-height:1.35}
+.field-warn{font-size:10.5px;color:#92400e;margin-top:3px;font-family:'Space Mono',monospace;line-height:1.35}
 
-/* Dispatch table */
-.dp-table{width:100%;border-collapse:collapse}
-.dp-table th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;font-weight:400;padding:6px 8px;text-align:left;border-bottom:1px solid #e2e8f0}
-.dp-table td{padding:6px 4px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
-.dp-table input{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;outline:none;transition:all .15s}
-.dp-table input:focus{border-color:#2563eb;background:#fff}
-.dp-table input.invalid{border-color:#ef4444;background:#fef2f2}
-.dp-table input.lat,.dp-table input.lng{font-family:'Space Mono',monospace;font-size:11.5px}
-.dp-table td.col-name{width:40%}
-.dp-table td.col-lat,.dp-table td.col-lng{width:22%}
-.dp-table td.col-del{width:16%;text-align:right}
-.dp-add-btn{margin-top:10px}
+/* Table (shared for dispatches, zones, brackets) */
+.rs-table{width:100%;border-collapse:collapse}
+.rs-table th{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;font-weight:400;padding:6px 6px;text-align:left;border-bottom:1px solid #e2e8f0;white-space:nowrap}
+.rs-table td{padding:6px 3px;border-bottom:1px solid #f1f5f9;vertical-align:top}
+.rs-table input,.rs-table select{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 7px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;outline:none;transition:all .15s;min-width:0}
+.rs-table input:focus,.rs-table select:focus{border-color:#2563eb;background:#fff}
+.rs-table input.invalid{border-color:#ef4444;background:#fef2f2}
+.rs-table input[type="number"]{font-family:'Space Mono',monospace;font-size:11.5px}
+.rs-table td.col-del{text-align:right;width:62px}
+.rs-table td.col-del .btn{padding:3px 7px;font-size:9px}
+.rs-table .cell-err{font-size:10px;color:#991b1b;margin-top:2px;font-family:'Space Mono',monospace;line-height:1.3}
+.rs-add-btn{margin-top:10px}
+.rs-warn{margin-top:8px;padding:7px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e;font-family:'Space Mono',monospace;font-size:11px;line-height:1.45}
+
+/* Hanford areas grid */
+.ha-grid{display:grid;grid-template-columns:1.2fr .7fr .9fr 1.6fr 56px;gap:6px 10px;align-items:start}
+.ha-grid .hdr-cell{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
+.ha-grid input{font-family:'DM Sans',sans-serif;font-size:12px;padding:6px 8px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;outline:none;width:100%;min-width:0}
+.ha-grid input:focus{border-color:#2563eb;background:#fff}
+.ha-grid input.invalid{border-color:#ef4444;background:#fef2f2}
+.ha-grid input[type="color"]{padding:2px;height:32px;cursor:pointer}
+.ha-grid input[type="number"]{font-family:'Space Mono',monospace;font-size:11.5px}
+.ha-grid .btn{padding:4px 8px;font-size:9px}
+.ha-geo-note{margin-top:10px;padding:8px 10px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:4px;color:#64748b;font-size:11.5px;line-height:1.5}
+.ha-geo-note strong{color:#334155}
 
 /* Bottom bar */
 .bottom-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;padding:12px 24px;box-shadow:0 -4px 16px rgba(15,23,42,.08);display:flex;align-items:center;gap:12px;z-index:100}
 .bottom-status{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:#64748b}
 .bottom-status .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#94a3b8;margin-right:8px;vertical-align:2px}
 .bottom-status.dirty .dot{background:#f59e0b;box-shadow:0 0 6px #f59e0b88}
+.bottom-status.err{color:#991b1b}
+.bottom-status.err .dot{background:#ef4444;box-shadow:0 0 6px #ef444488}
 .bottom-actions{margin-left:auto;display:flex;gap:10px}
 
 /* Diff view */
@@ -113,13 +138,21 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 /* Modal */
 .modal-wrap{position:fixed;inset:0;background:rgba(15,23,42,.45);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
 .modal-wrap.show{display:flex}
-.modal{background:#fff;border-radius:10px;max-width:540px;width:100%;padding:24px;box-shadow:0 10px 40px rgba(0,0,0,.25)}
+.modal{background:#fff;border-radius:10px;max-width:540px;width:100%;padding:24px;box-shadow:0 10px 40px rgba(0,0,0,.25);max-height:90vh;overflow-y:auto}
 .modal-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;letter-spacing:1px;color:#0f172a;margin-bottom:10px}
 .modal-body{font-size:13px;color:#475569;margin-bottom:14px;line-height:1.55}
 .modal-input-label{display:block;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:6px;margin-top:12px}
-.modal-input{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 10px;border:1px solid #e2e8f0;border-radius:4px;outline:none}
-.modal-input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.modal-input{width:100%;font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 10px;border:1px solid #e2e8f0;border-radius:4px;outline:none;background:#f8fafc}
+.modal-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.08)}
+.modal-input.invalid{border-color:#ef4444;background:#fef2f2}
+.modal-input[type="color"]{padding:2px;height:36px;width:60px;cursor:pointer}
+.modal-row{display:flex;gap:10px;align-items:center}
+.modal-row > *{flex:1}
 .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.feature-list{margin-top:6px;display:flex;flex-direction:column;gap:6px}
+.feature-check{display:flex;align-items:center;gap:8px;font-size:13px;color:#374151;cursor:pointer;padding:6px 10px;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc}
+.feature-check input{width:auto;margin:0;cursor:pointer}
+.feature-check:hover{background:#eff6ff;border-color:#bfdbfe}
 
 /* Toast */
 .toast{position:fixed;bottom:80px;right:24px;background:#1e293b;color:#fff;padding:12px 18px;border-radius:8px;font-size:13px;box-shadow:0 6px 24px rgba(0,0,0,.2);z-index:2000;display:none;max-width:380px;line-height:1.4}
@@ -179,11 +212,16 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 
   <div class="app">
     <div class="app-intro">
-      Edit rate data for each local below. <strong>Dispatches</strong> use the structured table;
-      everything else in each local's sub-tree is edited as JSON. Hit <strong>Preview changes</strong>
-      to see a unified diff, then <strong>Publish</strong> to commit to <code>main</code>.
-      GitHub Pages rebuilds in ~60 seconds; users get the new data on their next page load
-      (service worker uses network-first for <code>data.json</code>).
+      Edit rate data for each local below. Each section is a structured form &mdash; no JSON typing
+      required. Use <strong>+ Add new local</strong> to create a new local, or <strong>Delete local</strong>
+      on a card to remove one. Hit <strong>Preview changes</strong> to see a unified diff, then
+      <strong>Publish</strong> to commit to <code>main</code>. GitHub Pages rebuilds in ~60 seconds;
+      users get the new data on their next page load (service worker uses network-first for
+      <code>data.json</code>).
+    </div>
+
+    <div class="toolbar">
+      <button id="add-local-btn" class="btn">+ Add new local</button>
     </div>
 
     <div id="editor-body"><div class="loading">Loading data.json…</div></div>
@@ -237,6 +275,42 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
   </div>
 </div>
 
+<!-- ADD LOCAL MODAL -->
+<div id="add-local-modal" class="modal-wrap">
+  <div class="modal">
+    <div class="modal-title">Add new local</div>
+    <div class="modal-body">
+      Pick the rate-structure features the new local needs. Every selected feature gets an
+      empty skeleton section &mdash; fill it in after adding.
+    </div>
+    <label class="modal-input-label" for="al-number">Local number</label>
+    <input id="al-number" class="modal-input" type="text" placeholder="e.g. 290"/>
+    <label class="modal-input-label" for="al-name">Name</label>
+    <input id="al-name" class="modal-input" type="text" placeholder="e.g. Local 290"/>
+    <label class="modal-input-label" for="al-region">Region / Hall city</label>
+    <input id="al-region" class="modal-input" type="text" placeholder="e.g. Reno, NV"/>
+    <label class="modal-input-label" for="al-color">Color</label>
+    <div class="modal-row">
+      <input id="al-color" class="modal-input" type="color" value="#2563eb" style="flex:0 0 60px"/>
+      <input id="al-color-hex" class="modal-input" type="text" value="#2563eb" style="font-family:'Space Mono',monospace"/>
+    </div>
+    <label class="modal-input-label">Feature template</label>
+    <div class="feature-list">
+      <label class="feature-check"><input type="checkbox" id="al-f-zones" checked/>Travel zones</label>
+      <label class="feature-check"><input type="checkbox" id="al-f-brackets"/>Mileage brackets</label>
+      <label class="feature-check"><input type="checkbox" id="al-f-appendix"/>Appendix A zones</label>
+      <label class="feature-check"><input type="checkbox" id="al-f-perdiem"/>Per-diem</label>
+      <label class="feature-check"><input type="checkbox" id="al-f-hanford"/>Hanford-style override</label>
+      <label class="feature-check"><input type="checkbox" id="al-f-split"/>Vehicle-type split on zones</label>
+    </div>
+    <div id="al-error" class="field-error" style="margin-top:10px;display:none"></div>
+    <div class="modal-actions">
+      <button id="al-cancel" class="btn">Cancel</button>
+      <button id="al-confirm" class="btn pr">Add local</button>
+    </div>
+  </div>
+</div>
+
 <!-- Toast -->
 <div id="toast" class="toast"></div>
 
@@ -251,7 +325,7 @@ var PAT_KEY = 'subwatt_pat';
 
 // ========== State ==========
 var PAT = null;           // in-memory + sessionStorage
-var DATA = null;          // editor state (mutable)
+var DATA = null;          // editor state (mutable reference)
 var ORIGINAL = null;      // last-fetched baseline for diff
 var CURRENT_SHA = null;   // GitHub blob sha for optimistic locking
 
@@ -274,6 +348,8 @@ var signOutBtn = $('sign-out-btn');
 var publishModal = $('publish-modal');
 var commitMsgInput = $('commit-msg-input');
 var conflictModal = $('conflict-modal');
+var addLocalBtn = $('add-local-btn');
+var addLocalModal = $('add-local-modal');
 var toast = $('toast');
 
 function showToast(msg, kind){
@@ -298,7 +374,6 @@ function escapeAttr(s){
     return { '&':'&amp;', '"':'&quot;', '<':'&lt;', '>':'&gt;' }[c];
   });
 }
-
 function escapeHtml(s){
   return String(s).replace(/[&<>]/g, function(c){
     return { '&':'&amp;', '<':'&lt;', '>':'&gt;' }[c];
@@ -306,8 +381,6 @@ function escapeHtml(s){
 }
 
 // ========== API ==========
-// Requests go only to api.github.com with the PAT in the Authorization header.
-// The PAT is NEVER logged, sent to any other origin, or embedded in URLs.
 function apiRequest(path, opts){
   opts = opts || {};
   var headers = Object.assign({}, opts.headers || {}, {
@@ -395,7 +468,6 @@ function enterApp(){
       return;
     }
     buildEditor();
-    updateDirtyStatus();
   });
 }
 
@@ -433,228 +505,1038 @@ function handle401(){
   loginError.classList.add('show');
 }
 
-// ========== Editor ==========
-var LOCAL_ORDER = ['82', '7', '36'];
+// ==========================================================================
+//  EDITOR
+//
+//  ADDING A NEW RATE STRUCTURE FEATURE:
+//  1. Add the key in data.json's local sub-tree (e.g. "myFeature": { ... })
+//  2. Write a renderer function here that checks presence of the key and
+//     returns a section element. No existing local needs to migrate — feature
+//     detection is by key presence.
+//  3. Wire it into buildLocalCard() below the other "if (local.xxx)" blocks.
+//  Existing locals without the key skip the section automatically.
+// ==========================================================================
 
 function buildEditor(){
   editorBody.innerHTML = '';
-  LOCAL_ORDER.forEach(function(id){
+  Object.keys(DATA.locals).forEach(function(id){
     var local = DATA.locals[id];
-    if (!local) return;
     editorBody.appendChild(buildLocalCard(id, local));
   });
+  if (DATA.hanford){
+    editorBody.appendChild(buildHanfordCard(DATA.hanford));
+  }
   previewBtn.disabled = false;
+  runAllValidation();
+  updateDirtyStatus();
 }
 
+function rebuildEditor(){
+  // Full re-render (used after structural changes: add/delete local, add/delete zone).
+  buildEditor();
+}
+
+// ---------- Local card ----------
 function buildLocalCard(id, local){
   var card = document.createElement('div');
   card.className = 'lc';
   card.setAttribute('data-local-id', id);
-  card.innerHTML =
-    '<div class="lc-hdr">' +
-      '<div class="lc-swatch" style="background:' + escapeAttr(local.color || '#94a3b8') + '"></div>' +
-      '<div class="lc-name">' + escapeHtml(local.name || ('Local ' + id)) + '</div>' +
-      '<div class="lc-meta">' + escapeHtml(local.hallCity || '') + '</div>' +
-    '</div>' +
-    '<div class="lc-body">' +
-      '<div class="lc-sec">' +
-        '<div class="lc-sec-hdr">' +
-          '<span>Rates &amp; zones (JSON)</span>' +
-          '<span class="lc-sec-actions">' +
-            '<button class="btn small format-rates-btn">Format</button>' +
-          '</span>' +
-        '</div>' +
-        '<textarea class="rates-ta" spellcheck="false"></textarea>' +
-        '<div class="rates-msg"></div>' +
-      '</div>' +
-      '<div class="lc-sec">' +
-        '<div class="lc-sec-hdr"><span>Dispatches</span></div>' +
-        '<table class="dp-table"><thead><tr>' +
-          '<th>Name</th><th>Lat</th><th>Lng</th><th></th>' +
-        '</tr></thead><tbody class="dp-body"></tbody></table>' +
-        '<button class="btn small dp-add-btn">+ Add dispatch</button>' +
-      '</div>' +
-    '</div>';
 
-  var ta = card.querySelector('.rates-ta');
-  var ratesMsg = card.querySelector('.rates-msg');
-  var ratesSubtree = Object.assign({}, local);
-  delete ratesSubtree.dispatches;
-  ta.value = JSON.stringify(ratesSubtree, null, 2);
-
-  card.querySelector('.format-rates-btn').addEventListener('click', function(){
-    try {
-      var parsed = JSON.parse(ta.value);
-      ta.value = JSON.stringify(parsed, null, 2);
-      ta.classList.remove('invalid');
-      ratesMsg.className = 'rates-msg ok';
-      ratesMsg.textContent = 'Formatted.';
-      setTimeout(function(){ if (ratesMsg.classList.contains('ok')){ ratesMsg.className = 'rates-msg'; ratesMsg.textContent = ''; } }, 1500);
-      syncRatesToData(card, id);
-      updateDirtyStatus();
-    } catch (err){
-      ta.classList.add('invalid');
-      ratesMsg.className = 'rates-msg error';
-      ratesMsg.textContent = 'Cannot format — invalid JSON: ' + err.message;
-    }
+  var hdr = document.createElement('div');
+  hdr.className = 'lc-hdr';
+  var swatch = document.createElement('div');
+  swatch.className = 'lc-swatch';
+  swatch.style.background = local.color || '#94a3b8';
+  var nameEl = document.createElement('div');
+  nameEl.className = 'lc-name';
+  nameEl.textContent = local.name || ('Local ' + id);
+  var meta = document.createElement('div');
+  meta.className = 'lc-meta';
+  meta.textContent = local.hallCity || '';
+  var actWrap = document.createElement('div');
+  actWrap.style.marginLeft = 'auto';
+  var delBtn = document.createElement('button');
+  delBtn.className = 'btn small danger';
+  delBtn.textContent = 'Delete local';
+  delBtn.addEventListener('click', function(){
+    if (!confirm('Delete ' + (local.name || ('Local ' + id)) + '? This removes the entire local from data.json.')) return;
+    delete DATA.locals[id];
+    rebuildEditor();
   });
+  actWrap.appendChild(delBtn);
+  hdr.appendChild(swatch);
+  hdr.appendChild(nameEl);
+  hdr.appendChild(meta);
+  hdr.appendChild(actWrap);
+  card.appendChild(hdr);
 
-  ta.addEventListener('input', function(){
-    try {
-      JSON.parse(ta.value);
-      ta.classList.remove('invalid');
-      ratesMsg.className = 'rates-msg';
-      ratesMsg.textContent = '';
-      syncRatesToData(card, id);
-    } catch (err){
-      ta.classList.add('invalid');
-      ratesMsg.className = 'rates-msg error';
-      ratesMsg.textContent = 'JSON parse error: ' + err.message;
-    }
-    updateDirtyStatus();
-  });
-  ta.addEventListener('blur', function(){ validateRatesOnBlur(card, id); });
+  var body = document.createElement('div');
+  body.className = 'lc-body';
+  card.appendChild(body);
 
-  var body = card.querySelector('.dp-body');
-  (local.dispatches || []).forEach(function(dp){ body.appendChild(buildDispatchRow(dp)); });
+  // Info section (always)
+  body.appendChild(buildInfoSection(id, local, { swatch: swatch, nameEl: nameEl, meta: meta }));
 
-  card.querySelector('.dp-add-btn').addEventListener('click', function(){
-    body.appendChild(buildDispatchRow({ name: '', lat: 0, lng: 0 }));
-    syncDispatchesToData(card, id);
-    validateDispatchRows(body);
-    updateDirtyStatus();
-  });
+  // Dispatches (always)
+  body.appendChild(buildDispatchesSection(id, local));
 
-  body.addEventListener('input', function(){
-    validateDispatchRows(body);
-    syncDispatchesToData(card, id);
-    updateDirtyStatus();
-  });
-  body.addEventListener('click', function(e){
-    if (e.target.classList.contains('dp-del-btn')){
-      e.target.closest('tr').remove();
-      syncDispatchesToData(card, id);
-      validateDispatchRows(body);
-      updateDirtyStatus();
-    }
-  });
+  // Conditional sections — feature-detected by key presence.
+  if (Array.isArray(local.travelZones)){
+    body.appendChild(buildZonesSection(id, local, local.travelZones, 'Travel zones', 'travelZones'));
+  }
+  if (local.appendixA && Array.isArray(local.appendixA.zones)){
+    body.appendChild(buildAppendixASection(id, local));
+  }
+  if (local.mileageCalc && typeof local.mileageCalc === 'object'){
+    body.appendChild(buildMileageCalcSection(id, local.mileageCalc));
+  }
+  if (Array.isArray(local.mileageBrackets)){
+    body.appendChild(buildMileageBracketsSection(id, local.mileageBrackets));
+  }
+  if (local.perDiem !== undefined && local.perDiem !== null && typeof local.perDiem !== 'object'){
+    body.appendChild(buildPerDiemSection(id, local));
+  }
+  if (local.hanford){
+    body.appendChild(buildHanfordSection(local.hanford, 'Hanford override'));
+  }
 
   return card;
 }
 
-function buildDispatchRow(dp){
+// ---------- Info (scalar local fields) ----------
+function buildInfoSection(id, local, headerRefs){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Info</span></div>';
+  var grid = document.createElement('div');
+  grid.className = 'info-grid';
+  sec.appendChild(grid);
+
+  grid.appendChild(makeField('Name', textInput(local.name || '', function(v){
+    local.name = v;
+    if (headerRefs) headerRefs.nameEl.textContent = v || ('Local ' + id);
+  }, { required: true })));
+
+  var colorField = document.createElement('div');
+  colorField.className = 'info-field';
+  colorField.innerHTML = '<label>Color</label>';
+  var combo = document.createElement('div');
+  combo.className = 'color-combo';
+  var cPick = document.createElement('input');
+  cPick.type = 'color';
+  cPick.value = toHexColor(local.color || '#2563eb');
+  var cHex = document.createElement('input');
+  cHex.type = 'text';
+  cHex.value = local.color || '';
+  cHex.placeholder = '#2563eb';
+  function syncColor(v){
+    local.color = v;
+    if (headerRefs) headerRefs.swatch.style.background = v || '#94a3b8';
+  }
+  cPick.addEventListener('input', function(){
+    cHex.value = cPick.value;
+    cHex.classList.remove('invalid');
+    clearFieldError(cHex);
+    syncColor(cPick.value);
+    onEdit();
+  });
+  cHex.addEventListener('input', function(){
+    var v = cHex.value.trim();
+    if (!v){
+      cHex.classList.add('invalid');
+      setFieldError(cHex, 'Color required');
+      onEdit();
+      return;
+    }
+    if (!/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)){
+      cHex.classList.add('invalid');
+      setFieldError(cHex, 'Use #rgb or #rrggbb hex');
+      onEdit();
+      return;
+    }
+    cHex.classList.remove('invalid');
+    clearFieldError(cHex);
+    cPick.value = toHexColor(v);
+    syncColor(v);
+    onEdit();
+  });
+  combo.appendChild(cPick);
+  combo.appendChild(cHex);
+  colorField.appendChild(combo);
+  colorField.appendChild(makeErrorSlot(cHex));
+  grid.appendChild(colorField);
+
+  grid.appendChild(makeField('Hall city', textInput(local.hallCity || '', function(v){
+    local.hallCity = v;
+    if (headerRefs) headerRefs.meta.textContent = v || '';
+  })));
+  grid.appendChild(makeField('Phone (contact)', textInput(local.phone || '', function(v){ local.phone = v; })));
+
+  grid.appendChild(makeField('Address', textInput(local.address || '', function(v){ local.address = v; }), true));
+  grid.appendChild(makeField('Business manager', textInput(local.bm || '', function(v){ local.bm = v; }), true));
+  grid.appendChild(makeField('CBA', textInput(local.cba || '', function(v){ local.cba = v; }), true));
+
+  var jurArea = textareaInput(local.jurisdiction || '', function(v){ local.jurisdiction = v; });
+  grid.appendChild(makeField('Jurisdiction', jurArea, true));
+  var subsArea = textareaInput(local.subsNote || '', function(v){ local.subsNote = v; });
+  grid.appendChild(makeField('Subsistence note', subsArea, true));
+
+  // Center + zoom
+  if (Array.isArray(local.center)){
+    var latInp = numberInput(local.center[0], function(v){ local.center[0] = v; }, { min: -90, max: 90, step: 'any', required: true });
+    var lngInp = numberInput(local.center[1], function(v){ local.center[1] = v; }, { min: -180, max: 180, step: 'any', required: true });
+    grid.appendChild(makeField('Map center — lat', latInp));
+    grid.appendChild(makeField('Map center — lng', lngInp));
+  }
+  if (local.zoom !== undefined){
+    grid.appendChild(makeField('Map zoom', numberInput(local.zoom, function(v){ local.zoom = v; }, { step: 'any' })));
+  }
+  if (local.calcKind !== undefined){
+    var sel = document.createElement('select');
+    ['mileage','zones','zones_cv'].forEach(function(k){
+      var o = document.createElement('option');
+      o.value = k; o.textContent = k;
+      if (local.calcKind === k) o.selected = true;
+      sel.appendChild(o);
+    });
+    if (['mileage','zones','zones_cv'].indexOf(local.calcKind) === -1){
+      var o = document.createElement('option');
+      o.value = local.calcKind; o.textContent = local.calcKind + ' (custom)';
+      o.selected = true;
+      sel.appendChild(o);
+    }
+    sel.addEventListener('change', function(){ local.calcKind = sel.value; onEdit(); });
+    grid.appendChild(makeField('Calc kind', sel));
+  }
+
+  return sec;
+}
+
+function makeField(label, inputEl, wide){
+  var f = document.createElement('div');
+  f.className = 'info-field' + (wide ? ' wide' : '');
+  var lab = document.createElement('label');
+  lab.textContent = label;
+  f.appendChild(lab);
+  f.appendChild(inputEl);
+  f.appendChild(makeErrorSlot(inputEl));
+  return f;
+}
+function makeErrorSlot(inp){
+  var e = document.createElement('div');
+  e.className = 'field-error';
+  e.style.display = 'none';
+  inp.__errSlot = e;
+  return e;
+}
+function setFieldError(inp, msg){
+  if (!inp.__errSlot) return;
+  inp.__errSlot.textContent = msg;
+  inp.__errSlot.style.display = '';
+}
+function clearFieldError(inp){
+  if (!inp.__errSlot) return;
+  inp.__errSlot.textContent = '';
+  inp.__errSlot.style.display = 'none';
+}
+
+function textInput(value, onChange, opts){
+  opts = opts || {};
+  var i = document.createElement('input');
+  i.type = 'text';
+  i.value = value == null ? '' : value;
+  i.addEventListener('input', function(){
+    if (opts.required && !i.value.trim()){
+      i.classList.add('invalid');
+      setFieldError(i, 'Required');
+    } else {
+      i.classList.remove('invalid');
+      clearFieldError(i);
+    }
+    onChange(i.value);
+    onEdit();
+  });
+  return i;
+}
+
+function textareaInput(value, onChange){
+  var t = document.createElement('textarea');
+  t.value = value == null ? '' : value;
+  t.rows = 2;
+  t.addEventListener('input', function(){
+    onChange(t.value);
+    onEdit();
+  });
+  return t;
+}
+
+function numberInput(value, onChange, opts){
+  opts = opts || {};
+  var i = document.createElement('input');
+  i.type = 'number';
+  i.step = opts.step || 'any';
+  i.value = value == null ? '' : value;
+  function validate(){
+    var raw = i.value.trim();
+    if (raw === ''){
+      if (opts.nullable){
+        i.classList.remove('invalid');
+        clearFieldError(i);
+        onChange(null);
+        return true;
+      }
+      if (opts.required){
+        i.classList.add('invalid');
+        setFieldError(i, 'Required');
+        return false;
+      }
+      i.classList.remove('invalid');
+      clearFieldError(i);
+      onChange(null);
+      return true;
+    }
+    var n = Number(raw);
+    if (!isFinite(n)){
+      i.classList.add('invalid');
+      setFieldError(i, 'Must be a number');
+      return false;
+    }
+    if (opts.min != null && n < opts.min){
+      i.classList.add('invalid');
+      setFieldError(i, 'Min ' + opts.min);
+      return false;
+    }
+    if (opts.max != null && n > opts.max){
+      i.classList.add('invalid');
+      setFieldError(i, 'Max ' + opts.max);
+      return false;
+    }
+    i.classList.remove('invalid');
+    clearFieldError(i);
+    onChange(n);
+    return true;
+  }
+  i.addEventListener('input', function(){ validate(); onEdit(); });
+  i.addEventListener('blur', function(){ validate(); onEdit(); });
+  return i;
+}
+
+// ---------- Dispatches ----------
+function buildDispatchesSection(id, local){
+  if (!Array.isArray(local.dispatches)) local.dispatches = [];
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Dispatches</span></div>';
+
+  var table = document.createElement('table');
+  table.className = 'rs-table';
+  table.innerHTML =
+    '<thead><tr>' +
+      '<th style="width:45%">Name</th>' +
+      '<th style="width:22%">Lat</th>' +
+      '<th style="width:22%">Lng</th>' +
+      '<th></th>' +
+    '</tr></thead><tbody></tbody>';
+  var tbody = table.querySelector('tbody');
+
+  local.dispatches.forEach(function(dp, i){
+    tbody.appendChild(buildDispatchRow(local.dispatches, i));
+  });
+
+  sec.appendChild(table);
+
+  var add = document.createElement('button');
+  add.className = 'btn small rs-add-btn';
+  add.textContent = '+ Add dispatch';
+  add.addEventListener('click', function(){
+    local.dispatches.push({ name: '', lat: 0, lng: 0 });
+    tbody.appendChild(buildDispatchRow(local.dispatches, local.dispatches.length - 1));
+    onEdit();
+  });
+  sec.appendChild(add);
+
+  return sec;
+}
+
+function buildDispatchRow(arr, idx){
   var tr = document.createElement('tr');
-  tr.innerHTML =
-    '<td class="col-name"><input class="name" type="text" value="' + escapeAttr(dp.name == null ? '' : dp.name) + '" placeholder="City, ST"/></td>' +
-    '<td class="col-lat"><input class="lat" type="number" step="0.0001" value="' + (dp.lat == null ? '' : dp.lat) + '"/></td>' +
-    '<td class="col-lng"><input class="lng" type="number" step="0.0001" value="' + (dp.lng == null ? '' : dp.lng) + '"/></td>' +
-    '<td class="col-del"><button class="btn small danger dp-del-btn">Delete</button></td>';
+  var dp = arr[idx];
+  var nTd = document.createElement('td');
+  var laTd = document.createElement('td');
+  var lnTd = document.createElement('td');
+  var dTd = document.createElement('td');
+  dTd.className = 'col-del';
+
+  var n = textInput(dp.name || '', function(v){ arr[indexOfRow()].name = v; }, { required: true });
+  n.placeholder = 'City, ST';
+  var la = numberInput(dp.lat, function(v){ arr[indexOfRow()].lat = v; }, { min: -90, max: 90, step: 'any', required: true });
+  var ln = numberInput(dp.lng, function(v){ arr[indexOfRow()].lng = v; }, { min: -180, max: 180, step: 'any', required: true });
+
+  function indexOfRow(){
+    return Array.prototype.indexOf.call(tr.parentNode.children, tr);
+  }
+
+  nTd.appendChild(n); nTd.appendChild(makeErrorSlot(n));
+  laTd.appendChild(la); laTd.appendChild(makeErrorSlot(la));
+  lnTd.appendChild(ln); lnTd.appendChild(makeErrorSlot(ln));
+
+  var del = document.createElement('button');
+  del.className = 'btn small danger';
+  del.textContent = 'Delete';
+  del.addEventListener('click', function(){
+    var i = indexOfRow();
+    if (!confirm('Delete dispatch "' + (arr[i].name || '(unnamed)') + '"?')) return;
+    arr.splice(i, 1);
+    tr.remove();
+    onEdit();
+  });
+  dTd.appendChild(del);
+
+  tr.appendChild(nTd); tr.appendChild(laTd); tr.appendChild(lnTd); tr.appendChild(dTd);
   return tr;
 }
 
-// ========== Validation ==========
-function validateRatesOnBlur(card, localId){
-  var ta = card.querySelector('.rates-ta');
-  var msg = card.querySelector('.rates-msg');
-  var parsed;
-  try {
-    parsed = JSON.parse(ta.value);
-  } catch (err){
-    ta.classList.add('invalid');
-    msg.className = 'rates-msg error';
-    msg.textContent = 'JSON parse error: ' + err.message;
+// ---------- Zones table (generic) ----------
+// Used for travelZones AND appendixA.zones. Columns are the fixed set from spec,
+// with the amount column(s) conditionally split if any zone uses cvAmount or
+// { personal, company } shape.
+function buildZonesSection(id, local, zones, title, keyName){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>' + escapeHtml(title) + '</span></div>';
+
+  var wrap = document.createElement('div');
+  sec.appendChild(wrap);
+  renderZonesTable(wrap, zones, { localId: id, keyName: keyName });
+
+  return sec;
+}
+
+function zonesUseSplit(zones){
+  if (!zones.length) return false;
+  return zones.some(function(z){
+    if (z && typeof z.amount === 'object' && z.amount !== null && ('personal' in z.amount || 'company' in z.amount)) return true;
+    if (z && 'cvAmount' in z) return true;
     return false;
-  }
-  var problems = [];
-  function checkZone(z, i, ctx, needCv){
-    if (z.maxMi !== null && typeof z.maxMi !== 'number') problems.push(ctx + 'zone[' + i + '].maxMi must be a number or null');
-    if (typeof z.amount !== 'number') problems.push(ctx + 'zone[' + i + '].amount must be a number');
-    if (typeof z.calcLabel !== 'string') problems.push(ctx + 'zone[' + i + '].calcLabel must be a string');
-    if (typeof z.calcNote !== 'string') problems.push(ctx + 'zone[' + i + '].calcNote must be a string');
-    if (needCv && typeof z.cvAmount !== 'number') problems.push(ctx + 'zone[' + i + '].cvAmount must be a number');
-  }
-  if (!Array.isArray(parsed.travelZones)){
-    problems.push('travelZones must be an array');
+  });
+}
+
+function zonesUseObjectAmount(zones){
+  return zones.some(function(z){
+    return z && typeof z.amount === 'object' && z.amount !== null && ('personal' in z.amount || 'company' in z.amount);
+  });
+}
+
+function renderZonesTable(container, zones, ctx){
+  container.innerHTML = '';
+  var split = zonesUseSplit(zones);
+  var useObjectAmount = zonesUseObjectAmount(zones);
+
+  var table = document.createElement('table');
+  table.className = 'rs-table';
+  var th = '<thead><tr>' +
+    '<th style="width:10%">Label</th>' +
+    '<th style="width:16%">Miles</th>' +
+    '<th style="width:12%">Rate</th>' +
+    '<th style="width:14%">Note</th>' +
+    '<th style="width:7%">maxMi</th>' +
+    (split
+      ? '<th style="width:9%">Amt personal</th><th style="width:9%">Amt company</th>'
+      : '<th style="width:9%">Amount</th>') +
+    '<th style="width:12%">calcLabel</th>' +
+    '<th>calcNote</th>' +
+    '<th></th>' +
+  '</tr></thead><tbody></tbody>';
+  table.innerHTML = th;
+  var tbody = table.querySelector('tbody');
+
+  zones.forEach(function(z, i){
+    tbody.appendChild(buildZoneRow(zones, i, split, useObjectAmount, ctx));
+  });
+  container.appendChild(table);
+
+  var warnBox = document.createElement('div');
+  warnBox.className = 'rs-warn';
+  warnBox.style.display = 'none';
+  container.appendChild(warnBox);
+  container.__warnBox = warnBox;
+
+  var add = document.createElement('button');
+  add.className = 'btn small rs-add-btn';
+  add.textContent = '+ Add zone';
+  add.addEventListener('click', function(){
+    var template = zones[zones.length - 1] || null;
+    zones.push(makeBlankZone(template, split, useObjectAmount));
+    // Re-render table so that the new row has consistent bindings.
+    renderZonesTable(container, zones, ctx);
+    onEdit();
+  });
+  container.appendChild(add);
+
+  validateZones(zones, warnBox);
+}
+
+function makeBlankZone(template, split, useObjectAmount){
+  var z = {};
+  if (template){
+    Object.keys(template).forEach(function(k){
+      var v = template[k];
+      if (v === null) z[k] = null;
+      else if (typeof v === 'string') z[k] = '';
+      else if (typeof v === 'number') z[k] = 0;
+      else if (Array.isArray(v)) z[k] = [];
+      else if (typeof v === 'object'){
+        var sub = {};
+        Object.keys(v).forEach(function(sk){
+          sub[sk] = typeof v[sk] === 'number' ? 0 : (typeof v[sk] === 'string' ? '' : null);
+        });
+        z[k] = sub;
+      } else z[k] = null;
+    });
   } else {
-    parsed.travelZones.forEach(function(z, i){ checkZone(z, i, '', localId === '36'); });
+    z.label = '';
+    z.miles = '';
+    z.rate = '';
+    z.note = '';
+    z.maxMi = null;
+    if (split){
+      if (useObjectAmount) z.amount = { personal: 0, company: 0 };
+      else { z.amount = 0; z.cvAmount = 0; }
+    } else {
+      z.amount = 0;
+    }
+    z.calcLabel = '';
+    z.calcNote = '';
   }
-  if (localId === '7'){
-    if (!parsed.mileageCalc || typeof parsed.mileageCalc !== 'object') problems.push('mileageCalc must be an object');
-    if (!parsed.appendixA || typeof parsed.appendixA !== 'object') problems.push('appendixA must be an object');
-    else if (!Array.isArray(parsed.appendixA.zones)) problems.push('appendixA.zones must be an array');
-    else parsed.appendixA.zones.forEach(function(z, i){ checkZone(z, i, 'appendixA.', false); });
+  return z;
+}
+
+function buildZoneRow(zones, idx, split, useObjectAmount, ctx){
+  var tr = document.createElement('tr');
+  var z = zones[idx];
+
+  function indexOfRow(){ return Array.prototype.indexOf.call(tr.parentNode.children, tr); }
+  function zz(){ return zones[indexOfRow()]; }
+
+  // Label
+  var labelTd = document.createElement('td');
+  var lblInp = textInput(z.label == null ? '' : z.label, function(v){ zz().label = v; });
+  labelTd.appendChild(lblInp); labelTd.appendChild(makeErrorSlot(lblInp));
+
+  // Miles (display text)
+  var milesTd = document.createElement('td');
+  var milesInp = textInput(z.miles == null ? '' : z.miles, function(v){ zz().miles = v; });
+  milesTd.appendChild(milesInp); milesTd.appendChild(makeErrorSlot(milesInp));
+
+  // Rate (display text)
+  var rateTd = document.createElement('td');
+  var rateInp = textInput(z.rate == null ? '' : z.rate, function(v){ zz().rate = v; });
+  rateTd.appendChild(rateInp); rateTd.appendChild(makeErrorSlot(rateInp));
+
+  // Note (text)
+  var noteTd = document.createElement('td');
+  var noteInp;
+  if ('note' in z){
+    noteInp = textInput(z.note == null ? '' : z.note, function(v){ zz().note = v; });
+  } else {
+    noteInp = textInput('', function(v){
+      if (v !== '') zz().note = v;
+    });
+    noteInp.placeholder = '(n/a)';
   }
-  if (problems.length){
-    ta.classList.remove('invalid');
-    msg.className = 'rates-msg warn';
-    msg.textContent = 'Schema warnings:\n  • ' + problems.join('\n  • ');
-    return false;
+  noteTd.appendChild(noteInp); noteTd.appendChild(makeErrorSlot(noteInp));
+
+  // maxMi (number nullable)
+  var maxTd = document.createElement('td');
+  var maxInp = numberInput(z.maxMi, function(v){ zz().maxMi = v; }, { step: '0.01', nullable: true });
+  maxInp.placeholder = '∞';
+  maxTd.appendChild(maxInp); maxTd.appendChild(makeErrorSlot(maxInp));
+
+  // Amount / split
+  var amtCells = [];
+  if (split){
+    if (useObjectAmount){
+      if (!z.amount || typeof z.amount !== 'object') z.amount = { personal: 0, company: 0 };
+      var pTd = document.createElement('td');
+      var pInp = numberInput(z.amount.personal, function(v){
+        var zr = zz();
+        if (typeof zr.amount !== 'object' || zr.amount === null) zr.amount = { personal: 0, company: 0 };
+        zr.amount.personal = v;
+      }, { step: '0.01', required: true });
+      pTd.appendChild(pInp); pTd.appendChild(makeErrorSlot(pInp));
+      var cTd = document.createElement('td');
+      var cInp = numberInput(z.amount.company, function(v){
+        var zr = zz();
+        if (typeof zr.amount !== 'object' || zr.amount === null) zr.amount = { personal: 0, company: 0 };
+        zr.amount.company = v;
+      }, { step: '0.01', required: true });
+      cTd.appendChild(cInp); cTd.appendChild(makeErrorSlot(cInp));
+      amtCells.push(pTd, cTd);
+    } else {
+      var pTd2 = document.createElement('td');
+      var pInp2 = numberInput(z.amount, function(v){ zz().amount = v; }, { step: '0.01', required: true });
+      pTd2.appendChild(pInp2); pTd2.appendChild(makeErrorSlot(pInp2));
+      var cTd2 = document.createElement('td');
+      var cInp2 = numberInput(z.cvAmount, function(v){ zz().cvAmount = v; }, { step: '0.01', required: true });
+      cTd2.appendChild(cInp2); cTd2.appendChild(makeErrorSlot(cInp2));
+      amtCells.push(pTd2, cTd2);
+    }
+  } else {
+    var aTd = document.createElement('td');
+    var aInp = numberInput(z.amount, function(v){ zz().amount = v; }, { step: '0.01', required: true });
+    aTd.appendChild(aInp); aTd.appendChild(makeErrorSlot(aInp));
+    amtCells.push(aTd);
   }
-  ta.classList.remove('invalid');
-  msg.className = 'rates-msg';
-  msg.textContent = '';
-  return true;
+
+  // calcLabel
+  var clTd = document.createElement('td');
+  var clInp = textInput(z.calcLabel == null ? '' : z.calcLabel, function(v){ zz().calcLabel = v; });
+  clTd.appendChild(clInp); clTd.appendChild(makeErrorSlot(clInp));
+
+  // calcNote
+  var cnTd = document.createElement('td');
+  var cnInp = textInput(z.calcNote == null ? '' : z.calcNote, function(v){ zz().calcNote = v; });
+  cnTd.appendChild(cnInp); cnTd.appendChild(makeErrorSlot(cnInp));
+
+  // Delete
+  var delTd = document.createElement('td');
+  delTd.className = 'col-del';
+  var del = document.createElement('button');
+  del.className = 'btn small danger';
+  del.textContent = 'Delete';
+  del.addEventListener('click', function(){
+    var i = indexOfRow();
+    var lbl = zones[i].label || '(unlabeled)';
+    if (!confirm("Delete zone '" + lbl + "'?")) return;
+    zones.splice(i, 1);
+    tr.remove();
+    // Re-run ascending maxMi / duplicate-label warnings
+    var warnBox = tr.closest('div').querySelector ? null : null;
+    onEdit();
+    // Trigger warn revalidation by walking up to container
+    var container = (function(){
+      var el = tr.parentElement;
+      while (el && !el.__warnBox) el = el.parentElement;
+      return el;
+    })();
+    if (container && container.__warnBox) validateZones(zones, container.__warnBox);
+  });
+  delTd.appendChild(del);
+
+  tr.appendChild(labelTd);
+  tr.appendChild(milesTd);
+  tr.appendChild(rateTd);
+  tr.appendChild(noteTd);
+  tr.appendChild(maxTd);
+  amtCells.forEach(function(c){ tr.appendChild(c); });
+  tr.appendChild(clTd);
+  tr.appendChild(cnTd);
+  tr.appendChild(delTd);
+
+  // After any input in this row, re-run warn checks
+  tr.addEventListener('input', function(){
+    var el = tr.parentElement;
+    while (el && !el.__warnBox) el = el.parentElement;
+    if (el && el.__warnBox) validateZones(zones, el.__warnBox);
+  });
+
+  return tr;
 }
 
-function validateDispatchRows(body){
-  body.querySelectorAll('tr').forEach(function(row){
-    var n = row.querySelector('.name');
-    var la = row.querySelector('.lat');
-    var ln = row.querySelector('.lng');
-    n.classList.toggle('invalid', !n.value.trim());
-    var laN = parseFloat(la.value), lnN = parseFloat(ln.value);
-    la.classList.toggle('invalid', !(laN >= -90 && laN <= 90));
-    ln.classList.toggle('invalid', !(lnN >= -180 && lnN <= 180));
-  });
+function validateZones(zones, warnBox){
+  var warnings = [];
+  var prevMax = -Infinity;
+  for (var i = 0; i < zones.length; i++){
+    var m = zones[i].maxMi;
+    if (m === null || m === undefined) continue;
+    if (typeof m !== 'number') continue;
+    if (m < prevMax){
+      warnings.push('maxMi is not ascending across zones (zone ' + (i + 1) + ').');
+      break;
+    }
+    prevMax = m;
+  }
+  var seen = {};
+  for (var j = 0; j < zones.length; j++){
+    var lbl = (zones[j].label || '').trim();
+    if (!lbl) continue;
+    if (seen[lbl]){ warnings.push('Duplicate zone label: "' + lbl + '"'); break; }
+    seen[lbl] = true;
+  }
+  if (warnings.length){
+    warnBox.textContent = 'Warning: ' + warnings.join(' · ');
+    warnBox.style.display = '';
+  } else {
+    warnBox.textContent = '';
+    warnBox.style.display = 'none';
+  }
 }
 
-// ========== Sync ==========
-function syncRatesToData(card, localId){
-  var ta = card.querySelector('.rates-ta');
-  var parsed;
-  try { parsed = JSON.parse(ta.value); } catch (_) { return; }
-  var existing = DATA.locals[localId] || {};
-  var dispatches = existing.dispatches || [];
-  // Preserve ORIGINAL key order so an unrelated rate edit doesn't move
-  // `dispatches` around and create noise lines in the diff view.
-  var reference = (ORIGINAL && ORIGINAL.locals && ORIGINAL.locals[localId]) || parsed;
-  var rebuilt = {};
-  Object.keys(reference).forEach(function(k){
-    if (k === 'dispatches') rebuilt.dispatches = dispatches;
-    else if (k in parsed) rebuilt[k] = parsed[k];
-  });
-  // New keys the admin added that aren't in the reference go at the end
-  Object.keys(parsed).forEach(function(k){
-    if (!(k in rebuilt)) rebuilt[k] = parsed[k];
-  });
-  if (!('dispatches' in rebuilt)) rebuilt.dispatches = dispatches;
-  DATA.locals[localId] = rebuilt;
+// ---------- Appendix A ----------
+function buildAppendixASection(id, local){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Appendix A zones</span></div>';
+
+  var labelField = makeField('Appendix A label', textInput(local.appendixA.label || '', function(v){
+    local.appendixA.label = v;
+  }), true);
+  sec.appendChild(labelField);
+
+  var zonesWrap = document.createElement('div');
+  zonesWrap.style.marginTop = '14px';
+  sec.appendChild(zonesWrap);
+  renderZonesTable(zonesWrap, local.appendixA.zones, { localId: id, keyName: 'appendixA.zones' });
+
+  if (local.appendixA.fipsOverride && typeof local.appendixA.fipsOverride === 'object'){
+    var note = document.createElement('div');
+    note.className = 'ha-geo-note';
+    note.style.marginTop = '10px';
+    var fips = Object.keys(local.appendixA.fipsOverride).sort().join(', ');
+    note.innerHTML = '<strong>FIPS override:</strong> ' + escapeHtml(fips) +
+      ' <em>(FIPS code editing is a separate feature — boundaries are not editable here.)</em>';
+    sec.appendChild(note);
+  }
+
+  return sec;
 }
 
-function syncDispatchesToData(card, localId){
-  var rows = Array.from(card.querySelectorAll('.dp-body tr'));
-  var list = rows.map(function(r){
-    return {
-      name: r.querySelector('.name').value.trim(),
-      lat: parseFloat(r.querySelector('.lat').value),
-      lng: parseFloat(r.querySelector('.lng').value),
-    };
+// ---------- Mileage calc fields ----------
+function buildMileageCalcSection(id, mc){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Mileage calc</span></div>';
+  var grid = document.createElement('div');
+  grid.className = 'info-grid';
+  sec.appendChild(grid);
+
+  Object.keys(mc).forEach(function(k){
+    var v = mc[k];
+    if (typeof v === 'number'){
+      grid.appendChild(makeField(k, numberInput(v, function(val){ mc[k] = val; }, { step: 'any', required: true })));
+    } else {
+      grid.appendChild(makeField(k, textInput(v == null ? '' : v, function(val){ mc[k] = val; }), true));
+    }
   });
-  if (!DATA.locals[localId]) DATA.locals[localId] = {};
-  DATA.locals[localId].dispatches = list;
+
+  return sec;
 }
 
-// ========== Dirty tracking ==========
+// ---------- Mileage brackets table (future-ready feature) ----------
+function buildMileageBracketsSection(id, brackets){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Mileage brackets</span></div>';
+  var wrap = document.createElement('div');
+  sec.appendChild(wrap);
+  renderBracketsTable(wrap, brackets);
+  return sec;
+}
+
+function renderBracketsTable(container, brackets){
+  container.innerHTML = '';
+  var table = document.createElement('table');
+  table.className = 'rs-table';
+  table.innerHTML =
+    '<thead><tr>' +
+      '<th style="width:18%">fromMile</th>' +
+      '<th style="width:18%">toMile (blank = ∞)</th>' +
+      '<th style="width:30%">calcMethod</th>' +
+      '<th>rate</th>' +
+      '<th></th>' +
+    '</tr></thead><tbody></tbody>';
+  var tbody = table.querySelector('tbody');
+
+  brackets.forEach(function(b, i){
+    tbody.appendChild(buildBracketRow(brackets, i));
+  });
+  container.appendChild(table);
+
+  var add = document.createElement('button');
+  add.className = 'btn small rs-add-btn';
+  add.textContent = '+ Add bracket';
+  add.addEventListener('click', function(){
+    var last = brackets[brackets.length - 1];
+    brackets.push(last
+      ? { fromMile: last.toMile || 0, toMile: null, calcMethod: last.calcMethod || 'free', rate: 0 }
+      : { fromMile: 0, toMile: null, calcMethod: 'free', rate: 0 });
+    renderBracketsTable(container, brackets);
+    onEdit();
+  });
+  container.appendChild(add);
+}
+
+function buildBracketRow(arr, idx){
+  var tr = document.createElement('tr');
+  var b = arr[idx];
+  function indexOfRow(){ return Array.prototype.indexOf.call(tr.parentNode.children, tr); }
+  function bb(){ return arr[indexOfRow()]; }
+
+  var fTd = document.createElement('td');
+  var fInp = numberInput(b.fromMile, function(v){ bb().fromMile = v; }, { step: '0.01', required: true });
+  fTd.appendChild(fInp); fTd.appendChild(makeErrorSlot(fInp));
+
+  var tTd = document.createElement('td');
+  var tInp = numberInput(b.toMile, function(v){ bb().toMile = v; }, { step: '0.01', nullable: true });
+  tInp.placeholder = '∞';
+  tTd.appendChild(tInp); tTd.appendChild(makeErrorSlot(tInp));
+
+  var mTd = document.createElement('td');
+  var sel = document.createElement('select');
+  ['free','irsMileage','perDiem','flatRate'].forEach(function(k){
+    var o = document.createElement('option');
+    o.value = k; o.textContent = k;
+    if (b.calcMethod === k) o.selected = true;
+    sel.appendChild(o);
+  });
+  if (b.calcMethod && ['free','irsMileage','perDiem','flatRate'].indexOf(b.calcMethod) === -1){
+    var o = document.createElement('option');
+    o.value = b.calcMethod; o.textContent = b.calcMethod + ' (custom)';
+    o.selected = true;
+    sel.appendChild(o);
+  }
+  sel.addEventListener('change', function(){ bb().calcMethod = sel.value; onEdit(); });
+  mTd.appendChild(sel);
+
+  var rTd = document.createElement('td');
+  var rInp = numberInput(b.rate, function(v){ bb().rate = v; }, { step: '0.001', required: true });
+  rTd.appendChild(rInp); rTd.appendChild(makeErrorSlot(rInp));
+
+  var dTd = document.createElement('td');
+  dTd.className = 'col-del';
+  var del = document.createElement('button');
+  del.className = 'btn small danger';
+  del.textContent = 'Delete';
+  del.addEventListener('click', function(){
+    var i = indexOfRow();
+    if (!confirm('Delete bracket ' + (arr[i].fromMile) + '–' + (arr[i].toMile == null ? '∞' : arr[i].toMile) + '?')) return;
+    arr.splice(i, 1);
+    tr.remove();
+    onEdit();
+  });
+  dTd.appendChild(del);
+
+  tr.appendChild(fTd); tr.appendChild(tTd); tr.appendChild(mTd); tr.appendChild(rTd); tr.appendChild(dTd);
+  return tr;
+}
+
+// ---------- Per-diem ----------
+function buildPerDiemSection(id, local){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>Per-diem</span></div>';
+  var grid = document.createElement('div');
+  grid.className = 'info-grid';
+  grid.appendChild(makeField('Per-diem rate ($/day)', numberInput(local.perDiem, function(v){ local.perDiem = v; }, { step: '0.01', required: true })));
+  sec.appendChild(grid);
+  return sec;
+}
+
+// ---------- Hanford ----------
+function buildHanfordSection(hanford, title){
+  var sec = document.createElement('div');
+  sec.className = 'lc-sec';
+  sec.innerHTML = '<div class="lc-sec-hdr"><span>' + escapeHtml(title || 'Hanford override') + '</span></div>';
+
+  if (hanford.hssa !== undefined){
+    var grid = document.createElement('div');
+    grid.className = 'info-grid';
+    grid.appendChild(makeField('HSSA flat rate', numberInput(hanford.hssa, function(v){ hanford.hssa = v; }, { step: '0.01', required: true })));
+    sec.appendChild(grid);
+  }
+
+  if (hanford.areas && typeof hanford.areas === 'object'){
+    var wrap = document.createElement('div');
+    sec.appendChild(wrap);
+    renderHanfordAreas(wrap, hanford.areas);
+  }
+
+  var note = document.createElement('div');
+  note.className = 'ha-geo-note';
+  if (hanford.geo){
+    var featCount = (hanford.geo.features || []).length;
+    note.innerHTML = '<strong>Boundary polygons:</strong> ' + featCount + ' feature' + (featCount === 1 ? '' : 's') +
+      ' in GeoJSON. <em>Polygon editing is a separate v2 feature — not editable here.</em>';
+  } else {
+    note.innerHTML = '<em>No GeoJSON polygons attached.</em>';
+  }
+  sec.appendChild(note);
+
+  return sec;
+}
+
+function renderHanfordAreas(container, areas){
+  container.innerHTML = '';
+  var grid = document.createElement('div');
+  grid.className = 'ha-grid';
+  ['Name','Rate','Color','Description',''].forEach(function(h){
+    var c = document.createElement('div');
+    c.className = 'hdr-cell';
+    c.textContent = h;
+    grid.appendChild(c);
+  });
+
+  Object.keys(areas).forEach(function(k){
+    addAreaRow(grid, areas, k);
+  });
+
+  container.appendChild(grid);
+}
+
+function addAreaRow(grid, areas, key){
+  var area = areas[key];
+  var nInp = document.createElement('input');
+  nInp.type = 'text';
+  nInp.value = area.name || '';
+  nInp.addEventListener('input', function(){ area.name = nInp.value; onEdit(); });
+
+  var rInp = document.createElement('input');
+  rInp.type = 'number';
+  rInp.step = '0.01';
+  rInp.value = area.rate == null ? '' : area.rate;
+  rInp.addEventListener('input', function(){
+    var v = rInp.value.trim();
+    if (v === ''){ rInp.classList.add('invalid'); onEdit(); return; }
+    var n = Number(v);
+    if (!isFinite(n)){ rInp.classList.add('invalid'); onEdit(); return; }
+    rInp.classList.remove('invalid');
+    area.rate = n;
+    onEdit();
+  });
+
+  var cCombo = document.createElement('div');
+  cCombo.className = 'color-combo';
+  var cPick = document.createElement('input');
+  cPick.type = 'color';
+  cPick.value = toHexColor(area.color || '#2563eb');
+  var cHex = document.createElement('input');
+  cHex.type = 'text';
+  cHex.value = area.color || '';
+  cPick.addEventListener('input', function(){
+    cHex.value = cPick.value;
+    area.color = cPick.value;
+    cHex.classList.remove('invalid');
+    onEdit();
+  });
+  cHex.addEventListener('input', function(){
+    var v = cHex.value.trim();
+    if (!/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)){
+      cHex.classList.add('invalid');
+      onEdit();
+      return;
+    }
+    cHex.classList.remove('invalid');
+    cPick.value = toHexColor(v);
+    area.color = v;
+    onEdit();
+  });
+  cCombo.appendChild(cPick);
+  cCombo.appendChild(cHex);
+
+  var dInp = document.createElement('input');
+  dInp.type = 'text';
+  dInp.value = area.desc || '';
+  dInp.addEventListener('input', function(){ area.desc = dInp.value; onEdit(); });
+
+  var keyLabel = document.createElement('div');
+  keyLabel.style.fontFamily = "'Space Mono',monospace";
+  keyLabel.style.fontSize = '10px';
+  keyLabel.style.color = '#64748b';
+  keyLabel.style.textAlign = 'right';
+  keyLabel.textContent = key;
+
+  grid.appendChild(nInp);
+  grid.appendChild(rInp);
+  grid.appendChild(cCombo);
+  grid.appendChild(dInp);
+  grid.appendChild(keyLabel);
+}
+
+function buildHanfordCard(hanford){
+  var card = document.createElement('div');
+  card.className = 'lc';
+
+  var hdr = document.createElement('div');
+  hdr.className = 'lc-hdr';
+  var swatch = document.createElement('div');
+  swatch.className = 'lc-swatch';
+  swatch.style.background = '#ef4444';
+  var name = document.createElement('div');
+  name.className = 'lc-name';
+  name.textContent = 'Hanford (top-level)';
+  var meta = document.createElement('div');
+  meta.className = 'lc-meta';
+  meta.textContent = 'Shared across locals — detected by data.hanford';
+  hdr.appendChild(swatch);
+  hdr.appendChild(name);
+  hdr.appendChild(meta);
+  card.appendChild(hdr);
+
+  var body = document.createElement('div');
+  body.className = 'lc-body';
+  body.appendChild(buildHanfordSection(hanford, 'Areas'));
+  card.appendChild(body);
+  return card;
+}
+
+// ---------- Utilities ----------
+function toHexColor(v){
+  v = String(v || '').trim();
+  if (/^#[0-9a-fA-F]{6}$/.test(v)) return v;
+  if (/^#[0-9a-fA-F]{3}$/.test(v)){
+    return '#' + v[1]+v[1] + v[2]+v[2] + v[3]+v[3];
+  }
+  return '#2563eb';
+}
+
+// ========== Edit / validation plumbing ==========
+function onEdit(){
+  updateDirtyStatus();
+}
+
+function runAllValidation(){
+  // After full re-render, recompute validity (invalid class is already set by input handlers).
+  updateDirtyStatus();
+}
+
+function hasErrors(){
+  return !!editorBody.querySelector('.invalid');
+}
+
 function isDirty(){
   if (!DATA || !ORIGINAL) return false;
   return JSON.stringify(DATA) !== JSON.stringify(ORIGINAL);
 }
+
 function updateDirtyStatus(){
   var dirty = isDirty();
-  bottomStatus.classList.toggle('dirty', dirty);
-  bottomStatusText.textContent = dirty ? 'Unsaved changes' : 'No changes';
-  publishBtn.disabled = !dirty;
+  var errs = hasErrors();
+  bottomStatus.classList.toggle('dirty', dirty && !errs);
+  bottomStatus.classList.toggle('err', errs);
+  if (errs){
+    bottomStatusText.textContent = 'Validation errors — fix before publishing';
+  } else if (dirty){
+    bottomStatusText.textContent = 'Unsaved changes';
+  } else {
+    bottomStatusText.textContent = 'No changes';
+  }
+  publishBtn.disabled = !dirty || errs;
+  if (errs){
+    publishBtn.title = 'Fix validation errors before publishing';
+  } else if (!dirty){
+    publishBtn.title = 'No changes to publish';
+  } else {
+    publishBtn.title = '';
+  }
 }
+
+// Any input across the editor body triggers a status refresh in case validation
+// flagged or cleared something we didn't proxy directly.
+document.addEventListener('input', function(e){
+  if (!DATA) return;
+  if (!editorBody.contains(e.target)) return;
+  updateDirtyStatus();
+});
 
 window.addEventListener('beforeunload', function(e){
   if (PAT && isDirty()){
@@ -662,6 +1544,99 @@ window.addEventListener('beforeunload', function(e){
     e.returnValue = '';
     return '';
   }
+});
+
+// ========== Add Local modal ==========
+addLocalBtn.addEventListener('click', openAddLocalModal);
+
+function openAddLocalModal(){
+  $('al-number').value = '';
+  $('al-name').value = '';
+  $('al-region').value = '';
+  $('al-color').value = '#2563eb';
+  $('al-color-hex').value = '#2563eb';
+  $('al-f-zones').checked = true;
+  $('al-f-brackets').checked = false;
+  $('al-f-appendix').checked = false;
+  $('al-f-perdiem').checked = false;
+  $('al-f-hanford').checked = false;
+  $('al-f-split').checked = false;
+  $('al-error').style.display = 'none';
+  addLocalModal.classList.add('show');
+  setTimeout(function(){ $('al-number').focus(); }, 50);
+}
+
+$('al-color').addEventListener('input', function(){ $('al-color-hex').value = $('al-color').value; });
+$('al-color-hex').addEventListener('input', function(){
+  var v = $('al-color-hex').value.trim();
+  if (/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(v)){
+    $('al-color').value = toHexColor(v);
+    $('al-color-hex').classList.remove('invalid');
+  } else {
+    $('al-color-hex').classList.add('invalid');
+  }
+});
+
+$('al-cancel').addEventListener('click', function(){ addLocalModal.classList.remove('show'); });
+
+$('al-confirm').addEventListener('click', function(){
+  var num = $('al-number').value.trim();
+  var name = $('al-name').value.trim();
+  var region = $('al-region').value.trim();
+  var color = $('al-color-hex').value.trim();
+  var err = $('al-error');
+
+  if (!num){ err.textContent = 'Local number is required.'; err.style.display = ''; return; }
+  if (!name){ err.textContent = 'Name is required.'; err.style.display = ''; return; }
+  if (!color || !/^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(color)){
+    err.textContent = 'Color is required (hex format).'; err.style.display = ''; return;
+  }
+  if (DATA.locals[num]){
+    err.textContent = 'Local "' + num + '" already exists.'; err.style.display = ''; return;
+  }
+
+  var useZones    = $('al-f-zones').checked;
+  var useBrackets = $('al-f-brackets').checked;
+  var useAppendix = $('al-f-appendix').checked;
+  var usePerDiem  = $('al-f-perdiem').checked;
+  var useHanford  = $('al-f-hanford').checked;
+  var useSplit    = $('al-f-split').checked;
+
+  var local = {
+    name: name,
+    color: color,
+    hallCity: region,
+    address: '',
+    phone: '',
+    bm: '',
+    cba: '',
+    jurisdiction: '',
+    subsNote: '',
+    center: [0, 0],
+    zoom: 7,
+    dispatches: [],
+    calcKind: useSplit ? 'zones_cv' : (useBrackets ? 'mileage' : 'zones'),
+  };
+  if (useZones){
+    local.travelZones = [];
+  }
+  if (useBrackets){
+    local.mileageBrackets = [];
+  }
+  if (useAppendix){
+    local.appendixA = { label: '', fipsOverride: {}, zones: [] };
+  }
+  if (usePerDiem){
+    local.perDiem = 0;
+  }
+  if (useHanford){
+    local.hanford = { hssa: 0, areas: {} };
+  }
+
+  DATA.locals[num] = local;
+  addLocalModal.classList.remove('show');
+  rebuildEditor();
+  showToast('Added local ' + num, 'success');
 });
 
 // ========== Diff preview ==========
@@ -703,6 +1678,10 @@ $('close-diff-btn').addEventListener('click', function(){ diffView.classList.rem
 
 // ========== Publish ==========
 publishBtn.addEventListener('click', function(){
+  if (hasErrors()){
+    showToast('Fix validation errors first.', 'error');
+    return;
+  }
   commitMsgInput.value = 'chore: update data.json via admin UI — ' + new Date().toISOString();
   publishModal.classList.add('show');
   setTimeout(function(){ commitMsgInput.focus(); commitMsgInput.select(); }, 50);
@@ -731,7 +1710,6 @@ $('publish-confirm').addEventListener('click', function(){
       fetchData().then(function(f){
         if (f.ok){
           buildEditor();
-          updateDirtyStatus();
           diffView.classList.remove('show');
         }
       });

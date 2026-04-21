@@ -328,10 +328,10 @@
         {
           "label": "Zone 6+",
           "miles": "70+ mi",
-          "rate": "$150/day",
+          "rate": "$155/day",
           "note": "Subsistence zone · incl. $35/day meals",
           "maxMi": null,
-          "amount": 150,
+          "amount": 155,
           "calcLabel": "Zone 6+ — Subsistence",
           "calcNote": "Includes $35/day meals"
         }

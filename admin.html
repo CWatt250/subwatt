@@ -102,6 +102,47 @@ code{font-family:'Space Mono',monospace;font-size:.92em;background:#f1f5f9;paddi
 .rs-add-btn{margin-top:10px}
 .rs-warn{margin-top:8px;padding:7px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e;font-family:'Space Mono',monospace;font-size:11px;line-height:1.45}
 
+/* Zone card (amount-first layout) */
+.zone-list{display:flex;flex-direction:column;gap:10px}
+.zone-card{border:1px solid #e2e8f0;border-radius:6px;padding:12px 14px;background:#fafbfc}
+.zone-primary{display:grid;grid-template-columns:minmax(120px,1.3fr) 90px 130px auto;gap:10px;align-items:end}
+.zone-primary.split{grid-template-columns:minmax(120px,1.3fr) 90px 130px 130px auto}
+.zone-pfield{display:flex;flex-direction:column;min-width:0}
+.zone-pfield > label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;margin-bottom:4px;white-space:nowrap}
+.zone-pfield input{font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;border:1px solid #e2e8f0;border-radius:4px;background:#fff;outline:none;transition:all .15s;width:100%;min-width:0}
+.zone-pfield input:focus{border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.1)}
+.zone-pfield input.invalid{border-color:#ef4444;background:#fef2f2}
+.zone-pfield input[type="number"]{font-family:'Space Mono',monospace;font-size:11.5px}
+.zone-pfield.rate > label{color:#1d4ed8;font-weight:700;letter-spacing:1.5px}
+.zone-pfield.rate input{border:2px solid #93c5fd;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;padding:7px 10px;color:#1e3a8a;background:#fff}
+.zone-pfield.rate input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.zone-pfield.rate input.invalid{border-color:#ef4444;background:#fef2f2;color:#991b1b}
+.zone-del-wrap{align-self:end}
+.zone-del-wrap .btn{padding:6px 10px;font-size:9px}
+.zone-preview{margin-top:10px;padding:7px 11px;background:#eff6ff;border-left:3px solid #93c5fd;border-radius:3px;font-family:'Space Mono',monospace;font-size:11.5px;color:#1e3a8a;line-height:1.4}
+.zone-preview .preview-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-right:8px}
+.zone-preview .preview-text{font-weight:700}
+.zone-adv{margin-top:10px;border:1px solid #e2e8f0;border-radius:4px;background:#fff;overflow:hidden}
+.zone-adv > summary{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;padding:8px 12px;cursor:pointer;background:#f8fafc;user-select:none;list-style:none;display:block}
+.zone-adv > summary::-webkit-details-marker{display:none}
+.zone-adv > summary::before{content:'▸';color:#94a3b8;display:inline-block;margin-right:6px;transition:transform .15s;font-size:11px}
+.zone-adv[open] > summary::before{content:'▾'}
+.zone-adv[open] > summary{border-bottom:1px solid #e2e8f0}
+.zone-adv-body{padding:12px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px 14px}
+.zone-adv-body .info-field input{font-size:11.5px}
+.zone-adv-body .info-field.wide{grid-column:1 / -1}
+.zone-warn{grid-column:1 / -1;padding:7px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:4px;color:#92400e;font-family:'Space Mono',monospace;font-size:10.5px;line-height:1.45}
+.zone-adv-actions{grid-column:1 / -1;display:flex;justify-content:flex-end;gap:8px;margin-top:4px}
+
+/* Mileage calc primary/preview/advanced */
+.mc-primary{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px 14px;align-items:end}
+.mc-primary .info-field.rate > label{color:#1d4ed8;font-weight:700}
+.mc-primary .info-field.rate input{border:2px solid #93c5fd;font-family:'Space Mono',monospace;font-size:14px;font-weight:700;padding:7px 10px;color:#1e3a8a;background:#fff}
+.mc-primary .info-field.rate input:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.15)}
+.mc-preview{margin-top:10px;padding:7px 11px;background:#eff6ff;border-left:3px solid #93c5fd;border-radius:3px;font-family:'Space Mono',monospace;font-size:11.5px;color:#1e3a8a;line-height:1.4}
+.mc-preview .preview-label{font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#64748b;margin-right:8px}
+.mc-preview .preview-text{font-weight:700}
+
 /* Hanford areas grid */
 .ha-grid{display:grid;grid-template-columns:1.2fr .7fr .9fr 1.6fr 56px;gap:6px 10px;align-items:start}
 .ha-grid .hdr-cell{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:#64748b;padding-bottom:6px;border-bottom:1px solid #e2e8f0}
@@ -952,34 +993,19 @@ function renderZonesTable(container, zones, ctx){
   var split = zonesUseSplit(zones);
   var useObjectAmount = zonesUseObjectAmount(zones);
 
-  var table = document.createElement('table');
-  table.className = 'rs-table';
-  var th = '<thead><tr>' +
-    '<th style="width:10%">Label</th>' +
-    '<th style="width:16%">Miles</th>' +
-    '<th style="width:12%">Rate</th>' +
-    '<th style="width:14%">Note</th>' +
-    '<th style="width:7%">maxMi</th>' +
-    (split
-      ? '<th style="width:9%">Amt personal</th><th style="width:9%">Amt company</th>'
-      : '<th style="width:9%">Amount</th>') +
-    '<th style="width:12%">calcLabel</th>' +
-    '<th>calcNote</th>' +
-    '<th></th>' +
-  '</tr></thead><tbody></tbody>';
-  table.innerHTML = th;
-  var tbody = table.querySelector('tbody');
-
-  zones.forEach(function(z, i){
-    tbody.appendChild(buildZoneRow(zones, i, split, useObjectAmount, ctx));
-  });
-  container.appendChild(table);
-
   var warnBox = document.createElement('div');
   warnBox.className = 'rs-warn';
   warnBox.style.display = 'none';
   container.appendChild(warnBox);
   container.__warnBox = warnBox;
+
+  var list = document.createElement('div');
+  list.className = 'zone-list';
+  container.appendChild(list);
+
+  zones.forEach(function(z, i){
+    list.appendChild(buildZoneCard(zones, i, split, useObjectAmount, list, warnBox));
+  });
 
   var add = document.createElement('button');
   add.className = 'btn small rs-add-btn';
@@ -987,8 +1013,8 @@ function renderZonesTable(container, zones, ctx){
   add.addEventListener('click', function(){
     var template = zones[zones.length - 1] || null;
     zones.push(makeBlankZone(template, split, useObjectAmount));
-    // Re-render table so that the new row has consistent bindings.
-    renderZonesTable(container, zones, ctx);
+    list.appendChild(buildZoneCard(zones, zones.length - 1, split, useObjectAmount, list, warnBox));
+    validateZones(zones, warnBox);
     onEdit();
   });
   container.appendChild(add);
@@ -1031,136 +1057,445 @@ function makeBlankZone(template, split, useObjectAmount){
   return z;
 }
 
-function buildZoneRow(zones, idx, split, useObjectAmount, ctx){
-  var tr = document.createElement('tr');
+// ---------- Zone card (amount-first with live preview + Advanced collapsible) ----------
+//
+// Each zone is rendered as a card. Primary row: Label, maxMi, Amount (styled as
+// THE rate field), plus Delete. A live "Displays as:" line previews how admins
+// will see the row on the public site. Display strings (miles, rate, note,
+// calcLabel, calcNote) live in a collapsible Advanced section and auto-sync
+// whenever amount or maxMi changes — if the admin manually edited those fields
+// to a format we don't recognize, we warn and leave them alone.
+function buildZoneCard(zones, idx, split, useObjectAmount, listRef, sectionWarnBox){
   var z = zones[idx];
+  var card = document.createElement('div');
+  card.className = 'zone-card';
 
-  function indexOfRow(){ return Array.prototype.indexOf.call(tr.parentNode.children, tr); }
-  function zz(){ return zones[indexOfRow()]; }
+  function indexOfCard(){
+    var i = Array.prototype.indexOf.call(listRef.children, card);
+    return i === -1 ? idx : i;
+  }
+  function zz(){ return zones[indexOfCard()]; }
+
+  // ----- Primary row -----
+  var primary = document.createElement('div');
+  primary.className = 'zone-primary' + (split ? ' split' : '');
+  card.appendChild(primary);
+
+  function pfield(label, isRate){
+    var f = document.createElement('div');
+    f.className = 'zone-pfield' + (isRate ? ' rate' : '');
+    var lab = document.createElement('label');
+    lab.textContent = label;
+    f.appendChild(lab);
+    return f;
+  }
 
   // Label
-  var labelTd = document.createElement('td');
-  var lblInp = textInput(z.label == null ? '' : z.label, function(v){ zz().label = v; });
-  labelTd.appendChild(lblInp); labelTd.appendChild(makeErrorSlot(lblInp));
+  var labelField = pfield('Label');
+  var labelInp = document.createElement('input');
+  labelInp.type = 'text';
+  labelInp.value = z.label == null ? '' : z.label;
+  labelInp.addEventListener('input', function(){
+    zz().label = labelInp.value;
+    updatePreview();
+    validateZones(zones, sectionWarnBox);
+    onEdit();
+  });
+  labelField.appendChild(labelInp);
+  labelField.appendChild(makeErrorSlot(labelInp));
+  primary.appendChild(labelField);
 
-  // Miles (display text)
-  var milesTd = document.createElement('td');
-  var milesInp = textInput(z.miles == null ? '' : z.miles, function(v){ zz().miles = v; });
-  milesTd.appendChild(milesInp); milesTd.appendChild(makeErrorSlot(milesInp));
-
-  // Rate (display text)
-  var rateTd = document.createElement('td');
-  var rateInp = textInput(z.rate == null ? '' : z.rate, function(v){ zz().rate = v; });
-  rateTd.appendChild(rateInp); rateTd.appendChild(makeErrorSlot(rateInp));
-
-  // Note (text)
-  var noteTd = document.createElement('td');
-  var noteInp;
-  if ('note' in z){
-    noteInp = textInput(z.note == null ? '' : z.note, function(v){ zz().note = v; });
-  } else {
-    noteInp = textInput('', function(v){
-      if (v !== '') zz().note = v;
-    });
-    noteInp.placeholder = '(n/a)';
-  }
-  noteTd.appendChild(noteInp); noteTd.appendChild(makeErrorSlot(noteInp));
-
-  // maxMi (number nullable)
-  var maxTd = document.createElement('td');
-  var maxInp = numberInput(z.maxMi, function(v){ zz().maxMi = v; }, { step: '0.01', nullable: true });
+  // maxMi
+  var maxField = pfield('maxMi');
+  var maxInp = document.createElement('input');
+  maxInp.type = 'number';
+  maxInp.step = '0.01';
   maxInp.placeholder = '∞';
-  maxTd.appendChild(maxInp); maxTd.appendChild(makeErrorSlot(maxInp));
+  maxInp.value = z.maxMi == null ? '' : z.maxMi;
+  function handleMaxMi(){
+    var raw = maxInp.value.trim();
+    if (raw === ''){
+      maxInp.classList.remove('invalid');
+      clearFieldError(maxInp);
+      zz().maxMi = null;
+    } else {
+      var n = Number(raw);
+      if (!isFinite(n)){
+        maxInp.classList.add('invalid');
+        setFieldError(maxInp, 'Must be a number');
+        onEdit();
+        return;
+      }
+      maxInp.classList.remove('invalid');
+      clearFieldError(maxInp);
+      zz().maxMi = n;
+    }
+    var i = indexOfCard();
+    syncMilesForIndex(zones, i, listRef);
+    if (i + 1 < zones.length) syncMilesForIndex(zones, i + 1, listRef);
+    updatePreview();
+    validateZones(zones, sectionWarnBox);
+    onEdit();
+  }
+  maxInp.addEventListener('input', handleMaxMi);
+  maxInp.addEventListener('blur', handleMaxMi);
+  maxField.appendChild(maxInp);
+  maxField.appendChild(makeErrorSlot(maxInp));
+  primary.appendChild(maxField);
 
-  // Amount / split
-  var amtCells = [];
+  // Amount field(s). Single `Rate ($)` for non-split zones; two fields for split.
+  function buildAmountField(label, getVal, setVal, prefix){
+    var f = pfield(label, true);
+    var inp = document.createElement('input');
+    inp.type = 'number';
+    inp.step = '0.01';
+    var init = getVal();
+    inp.value = init == null ? '' : init;
+    function handle(){
+      var raw = inp.value.trim();
+      if (raw === ''){
+        inp.classList.add('invalid');
+        setFieldError(inp, 'Required');
+        onEdit();
+        return;
+      }
+      var n = Number(raw);
+      if (!isFinite(n)){
+        inp.classList.add('invalid');
+        setFieldError(inp, 'Must be a number');
+        onEdit();
+        return;
+      }
+      inp.classList.remove('invalid');
+      clearFieldError(inp);
+      var oldVal = getVal();
+      setVal(n);
+      var result = applyAmountSync(zz(), oldVal, n, prefix);
+      if (result.ok) clearWarn(); else setWarn('Rate display format not recognized — edit manually in Advanced.');
+      refreshAdvanced();
+      updatePreview();
+      onEdit();
+    }
+    inp.addEventListener('input', handle);
+    inp.addEventListener('blur', handle);
+    f.appendChild(inp);
+    f.appendChild(makeErrorSlot(inp));
+    return f;
+  }
+
   if (split){
     if (useObjectAmount){
       if (!z.amount || typeof z.amount !== 'object') z.amount = { personal: 0, company: 0 };
-      var pTd = document.createElement('td');
-      var pInp = numberInput(z.amount.personal, function(v){
-        var zr = zz();
-        if (typeof zr.amount !== 'object' || zr.amount === null) zr.amount = { personal: 0, company: 0 };
-        zr.amount.personal = v;
-      }, { step: '0.01', required: true });
-      pTd.appendChild(pInp); pTd.appendChild(makeErrorSlot(pInp));
-      var cTd = document.createElement('td');
-      var cInp = numberInput(z.amount.company, function(v){
-        var zr = zz();
-        if (typeof zr.amount !== 'object' || zr.amount === null) zr.amount = { personal: 0, company: 0 };
-        zr.amount.company = v;
-      }, { step: '0.01', required: true });
-      cTd.appendChild(cInp); cTd.appendChild(makeErrorSlot(cInp));
-      amtCells.push(pTd, cTd);
+      primary.appendChild(buildAmountField(
+        'Rate personal ($)',
+        function(){ return (zz().amount && typeof zz().amount === 'object') ? zz().amount.personal : null; },
+        function(v){ var zr = zz(); if (!zr.amount || typeof zr.amount !== 'object') zr.amount = { personal: 0, company: 0 }; zr.amount.personal = v; },
+        ''
+      ));
+      primary.appendChild(buildAmountField(
+        'Rate company ($)',
+        function(){ return (zz().amount && typeof zz().amount === 'object') ? zz().amount.company : null; },
+        function(v){ var zr = zz(); if (!zr.amount || typeof zr.amount !== 'object') zr.amount = { personal: 0, company: 0 }; zr.amount.company = v; },
+        'cv'
+      ));
     } else {
-      var pTd2 = document.createElement('td');
-      var pInp2 = numberInput(z.amount, function(v){ zz().amount = v; }, { step: '0.01', required: true });
-      pTd2.appendChild(pInp2); pTd2.appendChild(makeErrorSlot(pInp2));
-      var cTd2 = document.createElement('td');
-      var cInp2 = numberInput(z.cvAmount, function(v){ zz().cvAmount = v; }, { step: '0.01', required: true });
-      cTd2.appendChild(cInp2); cTd2.appendChild(makeErrorSlot(cInp2));
-      amtCells.push(pTd2, cTd2);
+      primary.appendChild(buildAmountField(
+        'Rate ($)',
+        function(){ return zz().amount; },
+        function(v){ zz().amount = v; },
+        ''
+      ));
+      primary.appendChild(buildAmountField(
+        'CV rate ($)',
+        function(){ return zz().cvAmount; },
+        function(v){ zz().cvAmount = v; },
+        'cv'
+      ));
     }
   } else {
-    var aTd = document.createElement('td');
-    var aInp = numberInput(z.amount, function(v){ zz().amount = v; }, { step: '0.01', required: true });
-    aTd.appendChild(aInp); aTd.appendChild(makeErrorSlot(aInp));
-    amtCells.push(aTd);
+    primary.appendChild(buildAmountField(
+      'Rate ($)',
+      function(){ return zz().amount; },
+      function(v){ zz().amount = v; },
+      ''
+    ));
   }
 
-  // calcLabel
-  var clTd = document.createElement('td');
-  var clInp = textInput(z.calcLabel == null ? '' : z.calcLabel, function(v){ zz().calcLabel = v; });
-  clTd.appendChild(clInp); clTd.appendChild(makeErrorSlot(clInp));
-
-  // calcNote
-  var cnTd = document.createElement('td');
-  var cnInp = textInput(z.calcNote == null ? '' : z.calcNote, function(v){ zz().calcNote = v; });
-  cnTd.appendChild(cnInp); cnTd.appendChild(makeErrorSlot(cnInp));
-
   // Delete
-  var delTd = document.createElement('td');
-  delTd.className = 'col-del';
+  var delField = document.createElement('div');
+  delField.className = 'zone-pfield zone-del-wrap';
+  delField.innerHTML = '<label>&nbsp;</label>';
   var del = document.createElement('button');
   del.className = 'btn small danger';
   del.textContent = 'Delete';
   del.addEventListener('click', function(){
-    var i = indexOfRow();
+    var i = indexOfCard();
     var lbl = zones[i].label || '(unlabeled)';
     if (!confirm("Delete zone '" + lbl + "'?")) return;
     zones.splice(i, 1);
-    tr.remove();
-    // Re-run ascending maxMi / duplicate-label warnings
-    var warnBox = tr.closest('div').querySelector ? null : null;
+    card.remove();
+    if (i < zones.length) syncMilesForIndex(zones, i, listRef);
+    validateZones(zones, sectionWarnBox);
     onEdit();
-    // Trigger warn revalidation by walking up to container
-    var container = (function(){
-      var el = tr.parentElement;
-      while (el && !el.__warnBox) el = el.parentElement;
-      return el;
-    })();
-    if (container && container.__warnBox) validateZones(zones, container.__warnBox);
   });
-  delTd.appendChild(del);
+  delField.appendChild(del);
+  primary.appendChild(delField);
 
-  tr.appendChild(labelTd);
-  tr.appendChild(milesTd);
-  tr.appendChild(rateTd);
-  tr.appendChild(noteTd);
-  tr.appendChild(maxTd);
-  amtCells.forEach(function(c){ tr.appendChild(c); });
-  tr.appendChild(clTd);
-  tr.appendChild(cnTd);
-  tr.appendChild(delTd);
+  // ----- Live preview -----
+  var preview = document.createElement('div');
+  preview.className = 'zone-preview';
+  card.appendChild(preview);
 
-  // After any input in this row, re-run warn checks
-  tr.addEventListener('input', function(){
-    var el = tr.parentElement;
-    while (el && !el.__warnBox) el = el.parentElement;
-    if (el && el.__warnBox) validateZones(zones, el.__warnBox);
+  // ----- Advanced (collapsible display-string editors) -----
+  var adv = document.createElement('details');
+  adv.className = 'zone-adv';
+  var sum = document.createElement('summary');
+  sum.textContent = 'Advanced (display strings)';
+  adv.appendChild(sum);
+  var advBody = document.createElement('div');
+  advBody.className = 'zone-adv-body';
+  adv.appendChild(advBody);
+
+  var warnSlot = document.createElement('div');
+  warnSlot.className = 'zone-warn';
+  warnSlot.style.display = 'none';
+  advBody.appendChild(warnSlot);
+
+  var advInputs = {};
+  function addAdvField(key, label, wide){
+    if (!(key in z)) return;
+    var f = document.createElement('div');
+    f.className = 'info-field' + (wide ? ' wide' : '');
+    var lab = document.createElement('label');
+    lab.textContent = label;
+    f.appendChild(lab);
+    var inp = document.createElement('input');
+    inp.type = 'text';
+    inp.value = z[key] == null ? '' : z[key];
+    inp.addEventListener('input', function(){
+      zz()[key] = inp.value;
+      updatePreview();
+      validateZones(zones, sectionWarnBox);
+      onEdit();
+    });
+    f.appendChild(inp);
+    f.appendChild(makeErrorSlot(inp));
+    advBody.appendChild(f);
+    advInputs[key] = inp;
+  }
+
+  addAdvField('miles', 'miles (display)', true);
+  addAdvField('rate', 'rate (display)');
+  if (split && !useObjectAmount) addAdvField('cvRate', 'cvRate (display)');
+  addAdvField('note', 'note');
+  addAdvField('calcLabel', 'calcLabel');
+  addAdvField('calcNote', 'calcNote', true);
+  if (split && !useObjectAmount) addAdvField('cvCalcNote', 'cvCalcNote', true);
+
+  var resetRow = document.createElement('div');
+  resetRow.className = 'zone-adv-actions';
+  var resetBtn = document.createElement('button');
+  resetBtn.className = 'btn small';
+  resetBtn.textContent = 'Reset display to match amount';
+  resetBtn.addEventListener('click', function(){
+    var zRef = zz();
+    var ok1 = true, ok2 = true;
+    if ('rate' in zRef){
+      var primaryAmt = (zRef.amount && typeof zRef.amount === 'object') ? zRef.amount.personal : zRef.amount;
+      var impliedOld = extractFirstDollar(zRef.rate);
+      if (impliedOld !== null){
+        ok1 = applyAmountSync(zRef, impliedOld, primaryAmt, '').ok;
+      } else if (/^\s*Free\s*$/i.test(zRef.rate || '') && primaryAmt === 0){
+        // already consistent
+      } else {
+        ok1 = false;
+      }
+    }
+    if ('cvRate' in zRef && 'cvAmount' in zRef){
+      var impliedOld2 = extractFirstDollar(zRef.cvRate);
+      if (impliedOld2 !== null){
+        ok2 = applyAmountSync(zRef, impliedOld2, zRef.cvAmount, 'cv').ok;
+      } else if (/^\s*Free\s*$/i.test(zRef.cvRate || '') && zRef.cvAmount === 0){
+        // consistent
+      } else {
+        ok2 = false;
+      }
+    }
+    if (ok1 && ok2) clearWarn(); else setWarn('Rate display format not recognized — edit manually in Advanced.');
+    refreshAdvanced();
+    updatePreview();
+    onEdit();
   });
+  resetRow.appendChild(resetBtn);
+  advBody.appendChild(resetRow);
 
-  return tr;
+  card.appendChild(adv);
+
+  // ----- Local helpers (closure-shared) -----
+  function refreshAdvanced(){
+    var zRef = zz();
+    Object.keys(advInputs).forEach(function(k){
+      advInputs[k].value = zRef[k] == null ? '' : zRef[k];
+    });
+  }
+  function updatePreview(){
+    var zRef = zz();
+    var label = zRef.label || '(no label)';
+    var rate = zRef.rate || '';
+    var text = rate ? (label + ' — ' + rate) : label;
+    preview.innerHTML = '<span class="preview-label">Displays as:</span><span class="preview-text">' + escapeHtml(text) + '</span>';
+  }
+  function setWarn(msg){
+    warnSlot.textContent = msg;
+    warnSlot.style.display = '';
+    adv.open = true;
+  }
+  function clearWarn(){
+    warnSlot.textContent = '';
+    warnSlot.style.display = 'none';
+  }
+
+  // Expose for maxMi cascade from the previous card.
+  card.__ctrl = {
+    setMiles: function(s){
+      zz().miles = s;
+      if (advInputs.miles) advInputs.miles.value = s;
+      updatePreview();
+    },
+    setMilesWarn: function(msg){ setWarn(msg); },
+    clearMilesWarn: function(){ clearWarn(); }
+  };
+
+  updatePreview();
+  return card;
+}
+
+// ---------- Auto-sync helpers ----------
+function detectRateTemplate(rate){
+  if (typeof rate !== 'string') return null;
+  var t = rate.trim();
+  if (/^Free$/i.test(t)) return { type: 'free' };
+  var m;
+  if ((m = t.match(/^Per Diem \(\$(\d+(?:\.\d+)?)\)$/))) return { type: 'perdiem' };
+  if ((m = t.match(/^\$(\d+(?:\.\d+)?)\/day$/))) return { type: 'dollarDay' };
+  if ((m = t.match(/^\$(\d+(?:\.\d+)?)$/))) return { type: 'dollar' };
+  return null;
+}
+function applyRateTemplate(template, amount){
+  switch (template.type){
+    case 'free': return 'Free';
+    case 'perdiem': return 'Per Diem ($' + fmtAmt(amount) + ')';
+    case 'dollarDay': return '$' + fmtAmt(amount) + '/day';
+    case 'dollar': return '$' + fmtAmt(amount);
+  }
+  return null;
+}
+function fmtAmt(n){
+  if (n == null || !isFinite(n)) return '';
+  return String(n);
+}
+function escapeRegex(s){
+  return String(s).replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+function replaceDollarAmount(str, oldAmt, newAmt){
+  if (typeof str !== 'string') return str;
+  if (oldAmt == null || !isFinite(oldAmt)) return str;
+  var re = new RegExp('\\$' + escapeRegex(String(oldAmt)) + '(?!\\d)', 'g');
+  return str.replace(re, '$' + fmtAmt(newAmt));
+}
+function extractFirstDollar(str){
+  if (typeof str !== 'string') return null;
+  var m = str.match(/\$(\d+(?:\.\d+)?)/);
+  return m ? Number(m[1]) : null;
+}
+
+// Apply auto-sync after amount change.
+//   prefix='' → sync rate, note, calcNote, calcLabel (primary amount)
+//   prefix='cv' → sync cvRate, cvCalcNote (vehicle-split company column)
+// Returns { ok } — ok=false means the rate display template wasn't recognized
+// and the caller should show a warning instead of silently leaving stale text.
+function applyAmountSync(z, oldAmount, newAmount, prefix){
+  if (prefix === 'cv'){
+    if (newAmount === 0){
+      if (typeof z.cvRate === 'string') z.cvRate = 'Free';
+      if ('cvCalcNote' in z) z.cvCalcNote = '';
+      return { ok: true };
+    }
+    var ok = true;
+    if (typeof z.cvRate === 'string'){
+      var tmpl = detectRateTemplate(z.cvRate);
+      if (tmpl) z.cvRate = applyRateTemplate(tmpl, newAmount);
+      else ok = false;
+    }
+    if ('cvCalcNote' in z){
+      z.cvCalcNote = replaceDollarAmount(z.cvCalcNote, oldAmount, newAmount);
+    }
+    return { ok: ok };
+  }
+
+  // Primary amount
+  if (newAmount === 0){
+    if (typeof z.rate === 'string') z.rate = 'Free';
+    if ('note' in z){
+      var noteVal = z.note == null ? '' : String(z.note);
+      if (noteVal === '' || /^\s*\$\d/.test(noteVal.trim())){
+        z.note = 'No travel pay';
+      } else {
+        z.note = replaceDollarAmount(z.note, oldAmount, newAmount);
+      }
+    }
+    if ('calcNote' in z) z.calcNote = '';
+    return { ok: true };
+  }
+
+  var ok2 = true;
+  if (typeof z.rate === 'string'){
+    var tmpl2 = detectRateTemplate(z.rate);
+    if (tmpl2) z.rate = applyRateTemplate(tmpl2, newAmount);
+    else ok2 = false;
+  }
+  if ('note' in z) z.note = replaceDollarAmount(z.note, oldAmount, newAmount);
+  if ('calcNote' in z) z.calcNote = replaceDollarAmount(z.calcNote, oldAmount, newAmount);
+  if ('calcLabel' in z && typeof z.calcLabel === 'string' && oldAmount != null){
+    if (z.calcLabel.indexOf('$' + oldAmount) !== -1){
+      z.calcLabel = replaceDollarAmount(z.calcLabel, oldAmount, newAmount);
+    }
+  }
+  return { ok: ok2 };
+}
+
+// When a zone's maxMi changes, its own miles display and the NEXT zone's
+// lower bound both need to update. Pattern-match the existing string to avoid
+// stomping admin-customized text.
+function syncMilesForIndex(zones, i, listRef){
+  if (i < 0 || i >= zones.length) return;
+  var z = zones[i];
+  if (!('miles' in z)) return;
+  var card = listRef.children[i];
+  var ctrl = card && card.__ctrl;
+  var prevMax = (i === 0) ? null : zones[i - 1].maxMi;
+  var lower = (prevMax == null || prevMax === undefined) ? 0 : (Number(prevMax) + 1);
+  var existing = typeof z.miles === 'string' ? z.miles : '';
+  var newStr;
+  if (z.maxMi == null){
+    if (!/^\d+\+ mi$/.test(existing)){
+      if (ctrl) ctrl.setMilesWarn('Miles format not recognized — edit manually in Advanced.');
+      return;
+    }
+    newStr = lower + '+ mi';
+  } else {
+    if (!/^\d+[-\u2013]\d+ mi$/.test(existing)){
+      if (ctrl) ctrl.setMilesWarn('Miles format not recognized — edit manually in Advanced.');
+      return;
+    }
+    newStr = lower + '\u2013' + fmtAmt(z.maxMi) + ' mi';
+  }
+  if (ctrl){
+    ctrl.setMiles(newStr);
+    ctrl.clearMilesWarn();
+  } else {
+    z.miles = newStr;
+  }
 }
 
 function validateZones(zones, warnBox){
@@ -1222,23 +1557,149 @@ function buildAppendixASection(id, local){
 }
 
 // ---------- Mileage calc fields ----------
+// Mirrors the zone pattern: perDiemAmount is the single source of truth, the
+// display text (perDiemNote) auto-syncs when it changes, the rest of the
+// numeric knobs stay as plain fields. Admin text labels live in Advanced.
 function buildMileageCalcSection(id, mc){
   var sec = document.createElement('div');
   sec.className = 'lc-sec';
   sec.innerHTML = '<div class="lc-sec-hdr"><span>Mileage calc</span></div>';
-  var grid = document.createElement('div');
-  grid.className = 'info-grid';
-  sec.appendChild(grid);
+
+  var primary = document.createElement('div');
+  primary.className = 'mc-primary';
+  sec.appendChild(primary);
+
+  var preview = document.createElement('div');
+  preview.className = 'mc-preview';
+  sec.appendChild(preview);
+
+  function updatePreview(){
+    var text = mc.perDiemNote || ('$' + fmtAmt(mc.perDiemAmount) + '/day');
+    preview.innerHTML = '<span class="preview-label">Displays as:</span><span class="preview-text">' + escapeHtml(text) + '</span>';
+  }
+
+  var advInputs = {};
+  var adv = document.createElement('details');
+  adv.className = 'zone-adv';
+  adv.style.marginTop = '10px';
+  var sum = document.createElement('summary');
+  sum.textContent = 'Advanced (display strings)';
+  adv.appendChild(sum);
+  var advBody = document.createElement('div');
+  advBody.className = 'zone-adv-body';
+  adv.appendChild(advBody);
+
+  var warnSlot = document.createElement('div');
+  warnSlot.className = 'zone-warn';
+  warnSlot.style.display = 'none';
+  advBody.appendChild(warnSlot);
+
+  function setWarn(msg){ warnSlot.textContent = msg; warnSlot.style.display = ''; adv.open = true; }
+  function clearWarn(){ warnSlot.textContent = ''; warnSlot.style.display = 'none'; }
+
+  // The text/label fields admins rarely touch → Advanced.
+  var ADV_KEYS = ['freeLabel','freeNote','mileageLabel','mileageNoteSuffix','perDiemLabel','perDiemNote'];
 
   Object.keys(mc).forEach(function(k){
     var v = mc[k];
-    if (typeof v === 'number'){
-      grid.appendChild(makeField(k, numberInput(v, function(val){ mc[k] = val; }, { step: 'any', required: true })));
+    if (k === 'perDiemAmount'){
+      var pFld = document.createElement('div');
+      pFld.className = 'info-field rate';
+      var pLab = document.createElement('label');
+      pLab.textContent = 'Per diem ($/day)';
+      pFld.appendChild(pLab);
+      var pInp = document.createElement('input');
+      pInp.type = 'number';
+      pInp.step = '0.01';
+      pInp.value = v == null ? '' : v;
+      function handlePerDiem(){
+        var raw = pInp.value.trim();
+        if (raw === ''){
+          pInp.classList.add('invalid');
+          setFieldError(pInp, 'Required');
+          onEdit();
+          return;
+        }
+        var n = Number(raw);
+        if (!isFinite(n)){
+          pInp.classList.add('invalid');
+          setFieldError(pInp, 'Must be a number');
+          onEdit();
+          return;
+        }
+        pInp.classList.remove('invalid');
+        clearFieldError(pInp);
+        var oldVal = mc.perDiemAmount;
+        mc.perDiemAmount = n;
+        if ('perDiemNote' in mc && typeof mc.perDiemNote === 'string'){
+          var newNote = replaceDollarAmount(mc.perDiemNote, oldVal, n);
+          mc.perDiemNote = newNote;
+          if (advInputs.perDiemNote) advInputs.perDiemNote.value = newNote;
+          if (oldVal != null && newNote === replaceDollarAmount(mc.perDiemNote, oldVal, oldVal) && mc.perDiemNote.indexOf('$' + fmtAmt(n)) === -1 && mc.perDiemNote.trim() !== ''){
+            // Note didn't contain $oldVal to replace
+            setWarn('perDiemNote has no "$' + fmtAmt(oldVal) + '" figure to update — edit manually in Advanced.');
+          } else {
+            clearWarn();
+          }
+        }
+        updatePreview();
+        onEdit();
+      }
+      pInp.addEventListener('input', handlePerDiem);
+      pInp.addEventListener('blur', handlePerDiem);
+      pFld.appendChild(pInp);
+      pFld.appendChild(makeErrorSlot(pInp));
+      primary.appendChild(pFld);
+    } else if (typeof v === 'number'){
+      primary.appendChild(makeField(k, numberInput(v, function(val){ mc[k] = val; updatePreview(); }, { step: 'any', required: true })));
+    } else if (ADV_KEYS.indexOf(k) !== -1){
+      var af = document.createElement('div');
+      af.className = 'info-field wide';
+      var lab = document.createElement('label');
+      lab.textContent = k;
+      af.appendChild(lab);
+      var inp = document.createElement('input');
+      inp.type = 'text';
+      inp.value = v == null ? '' : v;
+      inp.addEventListener('input', function(){
+        mc[k] = inp.value;
+        if (k === 'perDiemNote') updatePreview();
+        onEdit();
+      });
+      af.appendChild(inp);
+      af.appendChild(makeErrorSlot(inp));
+      advBody.appendChild(af);
+      advInputs[k] = inp;
     } else {
-      grid.appendChild(makeField(k, textInput(v == null ? '' : v, function(val){ mc[k] = val; }), true));
+      primary.appendChild(makeField(k, textInput(v == null ? '' : v, function(val){ mc[k] = val; }), true));
     }
   });
 
+  var resetRow = document.createElement('div');
+  resetRow.className = 'zone-adv-actions';
+  var resetBtn = document.createElement('button');
+  resetBtn.className = 'btn small';
+  resetBtn.textContent = 'Reset display to match amount';
+  resetBtn.addEventListener('click', function(){
+    if ('perDiemNote' in mc && typeof mc.perDiemNote === 'string'){
+      var implied = extractFirstDollar(mc.perDiemNote);
+      if (implied !== null){
+        mc.perDiemNote = replaceDollarAmount(mc.perDiemNote, implied, mc.perDiemAmount);
+        if (advInputs.perDiemNote) advInputs.perDiemNote.value = mc.perDiemNote;
+        clearWarn();
+      } else {
+        setWarn('perDiemNote has no dollar figure to align — edit manually.');
+      }
+    }
+    updatePreview();
+    onEdit();
+  });
+  resetRow.appendChild(resetBtn);
+  advBody.appendChild(resetRow);
+
+  sec.appendChild(adv);
+
+  updatePreview();
   return sec;
 }
 

@@ -4,6 +4,30 @@ HFIAW Western Jurisdiction travel rate estimator. Installable PWA.
 
 Live: https://cwatt250.github.io/subwatt/
 
+## Tech stack
+
+- **Map:** Leaflet on CartoDB *light* tiles
+- **Routing:** [Mapbox Directions API](https://docs.mapbox.com/api/navigation/directions/) (driving profile, GeoJSON geometry)
+- **Address search:** [Mapbox Search Box API](https://docs.mapbox.com/api/search/search-box/) — autocomplete for full street addresses, cities, and POIs across WA/OR/ID/MT/NV/WY
+- **PDF export:** [jsPDF](https://github.com/parallax/jsPDF) + [dom-to-image-more](https://github.com/1904labs/dom-to-image-more)
+- **Hosting:** GitHub Pages from `main`
+- **Rate data:** `data.json` (edited via [`admin.html`](admin.html))
+- **Offline shell:** service worker with versioned cache name
+
+The Mapbox publishable token (`pk.*`) is embedded directly in [`index.html`](index.html). It's URL-restricted in the Mapbox dashboard to `cwatt250.github.io/*`, so it's safe to keep in the public repo. Forkers need their own token — see [Forking / setup](#forking--setup).
+
+## Features
+
+- **Click any county** → see the local jurisdiction, dispatch options, and a travel-rate calculator
+- **Address & city search** with Mapbox autocomplete (street addresses, not just city names)
+- **Multi-dispatch stack** — toggle multiple dispatch points; the most-recently-activated drives the calculator and route
+- **Hanford HSSA override** — flat per-area rates inside the digitized Hanford Site polygons replace zone-based calculation
+- **Driving route + travel time** drawn from dispatch to jobsite via Mapbox Directions
+- **Route caching** — same dispatch→jobsite combo only hits the API once per session; miles *and* travel time are preserved across cache hits
+- **Reliable Clear** — clicking *Clear* aborts any in-flight route fetch (so a late response can't redraw after Clear) and removes both the polyline and its white outline
+- **Export PDF** — one-click landscape letter PDF with a map screenshot and the full estimate details column. If the location was reached via address search, the searched address appears as its own row.
+- **Installable PWA** with offline shell
+
 ## Deploy
 
 Hosted on GitHub Pages (main branch, root). Any push to `main` rebuilds the site.
@@ -14,7 +38,25 @@ git commit -m "..."
 git push
 ```
 
-The service worker caches the app shell and OSM tiles (capped at 500 tiles, oldest evicted first). When you ship asset changes, bump `CACHE_NAME` in `sw.js` so clients pick up the new build.
+The service worker caches the app shell and map tiles (capped at 500 tiles, oldest evicted first).
+
+### Cache-bump convention
+
+Bump `CACHE_NAME` in [`sw.js`](sw.js) (currently `subwatt-v7`) any time precached shell assets change — `index.html`, `admin.html`, `manifest.json`, icons, etc. The `activate` handler evicts every cache that doesn't match the current `CACHE_NAME` or the tile cache, so old clients pick up the new build on their next navigation.
+
+A README-only change does **not** require a SW bump.
+
+## Forking / setup
+
+If you fork this project for a different region or local:
+
+1. Fork the repo and enable GitHub Pages on `main` / root (Settings → Pages).
+2. Generate a Mapbox publishable token at https://account.mapbox.com/access-tokens/ — the default scopes are sufficient.
+3. **Restrict the token to your Pages URL** in the Mapbox dashboard (URL allowlist, e.g. `https://YOUR_USER.github.io/*`). This is what makes it safe to commit a `pk.*` token to a public repo.
+4. Replace the `MAPBOX_TOKEN` constant near the top of the `<script>` block in [`index.html`](index.html) with your token.
+5. Push. GitHub will rescan; if push protection flags the token format, allowlist that single token via the link in the error.
+
+GitHub's secret scanner flags `pk.*` Mapbox tokens by pattern even though they're designed to be publishable. URL-restricting the token in the Mapbox dashboard makes that flag a false positive.
 
 ## Editing rates
 
@@ -62,3 +104,9 @@ A code change is needed. The editor in [`admin.html`](admin.html) renders sectio
 Existing locals without the new key simply skip the section — feature detection is purely by key presence.
 
 Publishing writes a commit to `main` via the GitHub Contents API. The service worker uses network-first for `data.json`, so users get the new rates on their next page load (~60s after commit, once Pages rebuilds).
+
+## Recent changes
+
+- [`10afcef`](https://github.com/CWatt250/subwatt/commit/10afcef) — Travel time persists across route cache hits; SW v7
+- [`89daf18`](https://github.com/CWatt250/subwatt/commit/89daf18) — Mapbox migration (Directions + Search Box replace OSRM + Nominatim/city dictionary); SW v6
+- [`f39a343`](https://github.com/CWatt250/subwatt/commit/f39a343) — UI polish, Export PDF, route persistence fix (`routeLayers[]` + `__subwattRoute` tag + `AbortController`); SW v5

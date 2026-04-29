@@ -1,6 +1,6 @@
 // SubWatt service worker
 // Bump CACHE_NAME when shipping new assets so clients pick them up
-const CACHE_NAME = 'subwatt-v6';
+const CACHE_NAME = 'subwatt-v7';
 const TILE_CACHE = 'subwatt-tiles-v1';
 const MAX_TILES = 500;
 

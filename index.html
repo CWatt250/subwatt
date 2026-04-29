@@ -919,7 +919,7 @@ function drawRoute(fromLat,fromLng,fromName,toLat,toLng,color){
   var key=fromLat.toFixed(4)+','+fromLng.toFixed(4)+'|'+toLat.toFixed(4)+','+toLng.toFixed(4);
   if(ROUTE_CACHE[key]){
     var cached=ROUTE_CACHE[key];
-    renderRoute(cached.geometry,cached.miles,null,fromName,color);
+    renderRoute(cached.geometry,cached.miles,cached.timeStr||null,fromName,color);
     return;
   }
   var url='https://api.mapbox.com/directions/v5/mapbox/driving/'
@@ -942,7 +942,7 @@ function drawRoute(fromLat,fromLng,fromName,toLat,toLng,color){
     var mins=Math.round(route.duration/60);
     var hours=Math.floor(mins/60),remMins=mins%60;
     var timeStr=hours>0?hours+'h '+remMins+'m':mins+'m';
-    ROUTE_CACHE[key]={miles:miles,geometry:route.geometry};
+    ROUTE_CACHE[key]={miles:miles,geometry:route.geometry,timeStr:timeStr};
     renderRoute(route.geometry,miles,timeStr,fromName,color);
     ROUTE_FETCH_CTRL=null;
   }).catch(function(err){

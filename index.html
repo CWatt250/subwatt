@@ -223,6 +223,9 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 function bootApp(data){
+var MAPBOX_TOKEN='pk.eyJ1IjoiY3dhdHQtMjUwIiwiYSI6ImNtb2FjZ2k1ODA1NnEyd29pdjVxOWFxcTcifQ.iAwWLU3RLVav57dM4UuisQ';
+var ROUTE_CACHE={};
+var SESSION_TOKEN=(typeof crypto!=='undefined'&&crypto.randomUUID)?crypto.randomUUID():(String(Date.now())+Math.random());
 var LOCALS=data.locals;
 var FL=data.fipsToLocal;
 var SA=data.stateAbbr;
@@ -489,54 +492,92 @@ function showCountyLabel(cn,lat,lng,color){
 function clearResult(){clearDispatchZones();CUR_LAT=null;CUR_LNG=null;CUR_LID=null;CUR_FIPS=null;CUR_HANFORD=null;CUR_SEARCH_ADDRESS=null;PRIMARY_DISPATCH=null;ACTIVE_STACK=[];CALC_LID=null;LAST_ROUTE_MILES=null;AUTO_SELECTED=false;if(countyLabelMk){map.removeLayer(countyLabelMk);countyLabelMk=null;}if(mk){map.removeLayer(mk);mk=null;}document.querySelectorAll('.lrow').forEach(function(r){r.classList.remove('active');});document.getElementById('es').style.display='flex';var rc=document.getElementById('rc');rc.style.display='none';rc.innerHTML='';document.getElementById('hl').textContent='\u2014 select location \u2014';document.getElementById('sbm').textContent='Click any county to look up jurisdiction';document.getElementById('si').value='';}
 function flyTo(lid){CUR_SEARCH_ADDRESS=null;var l=LOCALS[lid];map.flyTo(l.center,l.zoom,{duration:.9});}
 
-// ── Nominatim Search + Autocomplete ─────────────────────────────────────────
-var searchTimer=null,searchDrop=null;
+// ── Mapbox Search Box (suggest + retrieve) ──────────────────────────────────
+var searchTimer=null,searchDrop=null,searchSuggestions=[],searchHighlight=-1;
 
-function nomFetch(q,cb){
-  var url='https://nominatim.openstreetmap.org/search?'
-    +'q='+encodeURIComponent(q)
-    +'&format=json&limit=6&addressdetails=1&countrycodes=us'
-    +'&viewbox=-124.8,49.1,-104.0,38.4&bounded=0';
-  fetch(url,{headers:{'User-Agent':'HFIAW-WesternEstimator/1.0'}})
-    .then(function(r){return r.json();}).then(cb).catch(function(){});
+function mbxSuggest(q,cb){
+  var url='https://api.mapbox.com/search/searchbox/v1/suggest'
+    +'?q='+encodeURIComponent(q)
+    +'&access_token='+MAPBOX_TOKEN
+    +'&session_token='+SESSION_TOKEN
+    +'&country=us'
+    +'&bbox=-125.0,41.0,-103.0,49.5'
+    +'&types=address,place,poi'
+    +'&limit=5';
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    cb((data&&data.suggestions)||[]);
+  }).catch(function(){cb([]);});
+}
+
+function mbxRetrieve(mapboxId,cb){
+  var url='https://api.mapbox.com/search/searchbox/v1/retrieve/'+encodeURIComponent(mapboxId)
+    +'?access_token='+MAPBOX_TOKEN
+    +'&session_token='+SESSION_TOKEN;
+  fetch(url).then(function(r){return r.json();}).then(function(data){
+    if(data&&data.features&&data.features.length){
+      var f=data.features[0];
+      var c=f.geometry&&f.geometry.coordinates;
+      if(c&&c.length>=2){
+        cb({lat:c[1],lng:c[0],properties:f.properties||{}});
+      }
+    }
+  }).catch(function(){});
 }
 
 function hideDrop(){
   if(searchDrop){searchDrop.remove();searchDrop=null;}
+  searchSuggestions=[];searchHighlight=-1;
 }
 
-function showDrop(results){
+function paintDropRows(){
+  if(!searchDrop)return;
+  var rows=searchDrop.querySelectorAll('[data-idx]');
+  for(var i=0;i<rows.length;i++){
+    rows[i].style.background=(i===searchHighlight)?'#f8fafc':'';
+  }
+}
+
+function selectSuggestion(i){
+  var s=searchSuggestions[i];
+  if(!s)return;
+  var query=document.getElementById('si').value;
+  document.getElementById('si').value=s.name||'';
   hideDrop();
-  if(!results||!results.length)return;
-  var inp=document.getElementById('si');
+  mbxRetrieve(s.mapbox_id,function(res){
+    var p=res.properties||{};
+    CUR_SEARCH_ADDRESS=p.full_address||p.place_formatted||p.name||query;
+    flyToCoord(res.lat,res.lng);
+  });
+}
+
+function showDrop(suggestions){
+  hideDrop();
+  if(!suggestions||!suggestions.length)return;
+  searchSuggestions=suggestions;
   var wrap=document.querySelector('.swi');
   var dd=document.createElement('div');
   dd.id='search-dd';
-  dd.style.cssText='position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid #e2e8f0;border-radius:8px;z-index:10000;overflow:hidden;box-shadow:0 4px 20px rgba(15,23,42,.12)';
-  results.forEach(function(r,i){
-    var a=r.address||{};
-    var city=a.city||a.town||a.village||a.hamlet||a.suburb||r.name||r.display_name.split(',')[0];
-    var county=(a.county||'').replace(' County','');
-    var state=a.state||'';
+  dd.style.cssText='position:absolute;top:calc(100% + 4px);left:0;right:0;background:#ffffff;border:1px solid #e2e8f0;border-radius:8px;z-index:10000;overflow:hidden;box-shadow:0 4px 20px rgba(15,23,42,.12);font-family:DM Sans,sans-serif;font-size:12px';
+  suggestions.forEach(function(s,i){
     var el=document.createElement('div');
+    el.setAttribute('data-idx',i);
     el.style.cssText='padding:7px 12px;cursor:pointer;border-bottom:1px solid #f1f5f9;'
-      +'display:flex;justify-content:space-between;align-items:center;transition:background .1s';
-    el.innerHTML='<span style="font-size:11px;color:#0f172a;font-family:DM Sans,sans-serif">'+city+'</span>'
-      +'<span style="font-size:10px;color:#94a3b8;font-family:DM Sans,sans-serif">'
-      +(county?county+' Co · ':'')+state+'</span>';
-    el.addEventListener('mouseover',function(){this.style.background='#eff6ff';});
-    el.addEventListener('mouseout',function(){this.style.background='';});
+      +'display:flex;justify-content:space-between;align-items:center;gap:10px;transition:background .1s';
+    var primary=s.name||'';
+    var secondary=s.place_formatted||s.full_address||'';
+    el.innerHTML='<span style="font-size:12px;color:#0f172a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+primary+'</span>'
+      +'<span style="font-size:10px;color:#94a3b8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%">'+secondary+'</span>';
+    el.addEventListener('mouseover',function(){searchHighlight=i;paintDropRows();});
     el.addEventListener('mousedown',function(e){
       e.preventDefault();
-      document.getElementById('si').value=city;
-      CUR_SEARCH_ADDRESS=r.display_name||city;
-      hideDrop();
-      flyToCoord(parseFloat(r.lat),parseFloat(r.lon));
+      selectSuggestion(i);
     });
     dd.appendChild(el);
   });
   wrap.appendChild(dd);
   searchDrop=dd;
+  searchHighlight=0;
+  paintDropRows();
 }
 
 function flyToCoord(lat,lng){
@@ -567,16 +608,16 @@ function flyToCoord(lat,lng){
 }
 
 function doSearch(){
-  hideDrop();
   var raw=document.getElementById('si').value.trim();
   if(!raw)return;
-  nomFetch(raw,function(results){
-    if(results&&results.length){
-      var r=results[0],a=r.address||{};
-      var city=a.city||a.town||a.village||a.hamlet||r.display_name.split(',')[0];
-      document.getElementById('si').value=city;
-      CUR_SEARCH_ADDRESS=r.display_name||city||raw;
-      flyToCoord(parseFloat(r.lat),parseFloat(r.lon));
+  if(searchSuggestions&&searchSuggestions.length){
+    selectSuggestion(searchHighlight>=0?searchHighlight:0);
+    return;
+  }
+  mbxSuggest(raw,function(suggestions){
+    if(suggestions&&suggestions.length){
+      searchSuggestions=suggestions;
+      selectSuggestion(0);
     } else {
       document.getElementById('sbm').textContent='"'+raw+'" not found';
     }
@@ -587,14 +628,36 @@ var siEl=document.getElementById('si');
 siEl.addEventListener('input',function(){
   clearTimeout(searchTimer);
   var q=this.value.trim();
-  if(q.length<2){hideDrop();return;}
-  searchTimer=setTimeout(function(){nomFetch(q,showDrop);},300);
+  if(q.length<3){hideDrop();return;}
+  searchTimer=setTimeout(function(){mbxSuggest(q,showDrop);},250);
 });
 siEl.addEventListener('keydown',function(e){
-  if(e.key==='Enter'){clearTimeout(searchTimer);doSearch();}
-  if(e.key==='Escape'){hideDrop();}
+  if(e.key==='Enter'){
+    e.preventDefault();
+    clearTimeout(searchTimer);
+    if(searchSuggestions&&searchSuggestions.length){
+      selectSuggestion(searchHighlight>=0?searchHighlight:0);
+    } else {
+      doSearch();
+    }
+  } else if(e.key==='Escape'){
+    hideDrop();
+  } else if(e.key==='ArrowDown'&&searchSuggestions.length){
+    e.preventDefault();
+    searchHighlight=(searchHighlight+1)%searchSuggestions.length;
+    paintDropRows();
+  } else if(e.key==='ArrowUp'&&searchSuggestions.length){
+    e.preventDefault();
+    searchHighlight=(searchHighlight-1+searchSuggestions.length)%searchSuggestions.length;
+    paintDropRows();
+  }
 });
-siEl.addEventListener('blur',function(){setTimeout(hideDrop,200);});
+document.addEventListener('mousedown',function(e){
+  if(!searchDrop)return;
+  if(e.target===siEl)return;
+  if(searchDrop.contains(e.target))return;
+  hideDrop();
+});
 
 setTimeout(function(){map.invalidateSize();},200);
 // ── Cost Calculator ──────────────────────────────────────────────────────────
@@ -853,9 +916,15 @@ function renderRoute(geometry,miles,timeStr,fromName,color){
 function drawRoute(fromLat,fromLng,fromName,toLat,toLng,color){
   clearRoute();
   showRouteInfo('Calculating route from '+fromName+'...',color,null,null);
-  var url='https://router.project-osrm.org/route/v1/driving/'
+  var key=fromLat.toFixed(4)+','+fromLng.toFixed(4)+'|'+toLat.toFixed(4)+','+toLng.toFixed(4);
+  if(ROUTE_CACHE[key]){
+    var cached=ROUTE_CACHE[key];
+    renderRoute(cached.geometry,cached.miles,null,fromName,color);
+    return;
+  }
+  var url='https://api.mapbox.com/directions/v5/mapbox/driving/'
     +fromLng+','+fromLat+';'+toLng+','+toLat
-    +'?overview=full&geometries=geojson';
+    +'?geometries=geojson&overview=full&access_token='+MAPBOX_TOKEN;
   var fetchOpts={};
   if(typeof AbortController!=='undefined'){
     ROUTE_FETCH_CTRL=new AbortController();
@@ -873,6 +942,7 @@ function drawRoute(fromLat,fromLng,fromName,toLat,toLng,color){
     var mins=Math.round(route.duration/60);
     var hours=Math.floor(mins/60),remMins=mins%60;
     var timeStr=hours>0?hours+'h '+remMins+'m':mins+'m';
+    ROUTE_CACHE[key]={miles:miles,geometry:route.geometry};
     renderRoute(route.geometry,miles,timeStr,fromName,color);
     ROUTE_FETCH_CTRL=null;
   }).catch(function(err){

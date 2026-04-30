@@ -123,6 +123,67 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
 .leaflet-control-attribution a{color:#2563eb!important}
 .leaflet-control-zoom a{background:#ffffff!important;border-color:#e2e8f0!important;color:#374151!important;box-shadow:0 1px 4px rgba(15,23,42,.08)!important}
 .leaflet-control-zoom a:hover{background:#f1f5f9!important;color:#0f172a!important}
+
+/* Mobile-only elements — hidden by default; @media (max-width:768px) shows them. */
+#mobile-menu-btn{display:none}
+#mobile-menu{display:none}
+#mobile-sheet{display:none}
+
+/* ── Mobile (≤768px) ─────────────────────────────────────────
+   Everything mobile lives inside this block so desktop layout is byte-identical. */
+@media (max-width: 768px){
+  #topbar{flex:0 0 48px;padding:0 10px}
+  #topbar .tb-sep{display:none}
+  #topbar .tb-right{display:none}
+  #topbar .tb-logo{margin-right:8px}
+  #topbar .tb-logo .tb-title-wrap{display:none}
+  #topbar .tb-logo-mark{width:30px;height:30px}
+  .tb-sw{min-width:0;max-width:none;flex:1;gap:6px}
+  .tb-sw .tb-btn{padding:6px 9px;font-size:10px}
+  .tb-search{font-size:14px;padding:7px 10px 7px 26px}
+  .si-icon{left:8px}
+
+  #mobile-menu-btn{display:flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0;margin-left:6px;background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;color:#374151;cursor:pointer;flex-shrink:0}
+  #mobile-menu-btn:active{background:#e2e8f0}
+
+  #sidebar{display:none}
+  #mw{flex:1 1 0;min-height:0;height:calc(100vh - 48px - 80px - 26px)}
+  .hud{display:none}
+
+  #statusbar{flex:0 0 26px;padding:0 10px;gap:10px;font-size:8px}
+  #statusbar > div:nth-child(2){display:none}
+  #statusbar > div:last-child{font-size:8px}
+
+  #mobile-menu{display:none;position:fixed;top:48px;left:0;right:0;bottom:0;background:rgba(15,23,42,.45);z-index:950;backdrop-filter:blur(2px)}
+  #mobile-menu.is-open{display:block}
+  #mobile-menu .mm-panel{background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #e2e8f0;box-shadow:0 6px 16px rgba(15,23,42,.12)}
+  #mobile-menu .mm-btn{min-height:48px;width:100%;padding:0 14px;display:flex;align-items:center;gap:10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#0f172a;cursor:pointer;text-align:left}
+  #mobile-menu .mm-btn:active{background:#f1f5f9}
+  #mobile-menu .mm-btn.help{background:#fef3c7;border-color:#fcd34d;color:#92400e}
+  #mobile-menu .mm-btn.exp{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+  #mobile-menu .mm-btn.inst{background:#2563eb;border-color:#1d4ed8;color:#fff}
+
+  #mobile-sheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:26px;height:80px;transition:height .25s ease;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 16px rgba(15,23,42,.08);z-index:800;overflow:hidden}
+  #mobile-sheet.mobile-sheet--expanded{height:70vh}
+  #mobile-sheet .ms-handle{width:36px;height:4px;background:#94a3b8;border-radius:2px;margin:8px auto 4px;flex-shrink:0;cursor:pointer}
+  #mobile-sheet .ms-peek{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;cursor:pointer;flex-shrink:0;min-height:44px;gap:12px}
+  #mobile-sheet .ms-peek-county{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+  #mobile-sheet .ms-peek-rate{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#0369a1;flex-shrink:0}
+  #mobile-sheet .ms-peek-empty{font-family:'DM Sans',sans-serif;font-size:12px;color:#94a3b8;flex:1}
+  #mobile-sheet .ms-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:12px}
+  #mobile-sheet:not(.mobile-sheet--expanded) .ms-body{display:none}
+  #mobile-sheet .ms-body #rc{display:flex !important;flex-direction:column}
+  #mobile-sheet button{min-height:36px}
+  #mobile-sheet .lrow,#mobile-sheet .wr{padding-top:10px;padding-bottom:10px}
+
+  /* Search dropdown — full viewport width and readable so iOS Safari doesn't auto-zoom */
+  #search-dd{position:fixed !important;top:50px !important;left:6px !important;right:6px !important;font-size:14px !important;max-height:60vh;overflow-y:auto}
+  #search-dd > div{padding:11px 12px !important;font-size:13px}
+
+  /* Help modal full-screen on mobile */
+  #help-modal{padding:0 !important;align-items:flex-start !important}
+  #help-modal > div{max-width:100% !important;width:100% !important;height:100vh;max-height:100vh !important;border-radius:0 !important}
+}
 </style>
 </head>
 <body>
@@ -139,7 +200,7 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
       <button class="tb-btn pr" onclick="doSearch()">Search</button>
       <button class="tb-btn" onclick="clearResult()">Clear</button>
     </div>
-    <div class="tb-right"><button class="tb-btn" onclick="toggleHelp()" title="How to use" style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#fef3c7;border-color:#fcd34d;color:#92400e" onmouseover="this.style.background='#fde68a';this.style.borderColor='#f59e0b'" onmouseout="this.style.background='#fef3c7';this.style.borderColor='#fcd34d'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>How to use</button><button id="btn-export" class="tb-btn" onclick="exportPdf()" title="Export current view as PDF" style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#ecfdf5;border-color:#a7f3d0;color:#065f46" onmouseover="this.style.background='#d1fae5';this.style.borderColor='#34d399'" onmouseout="this.style.background='#ecfdf5';this.style.borderColor='#a7f3d0'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export PDF</button><button id="install-btn" hidden style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;background:#2563eb;border:1px solid #1d4ed8;border-radius:4px;padding:5px 12px;cursor:pointer" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Install App</button><div class="tb-tag" id="tb-tag-locals">HFIAW · 3 Locals</div><div class="tb-dot"></div></div>
+    <div class="tb-right"><button class="tb-btn" onclick="toggleHelp()" title="How to use" style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#fef3c7;border-color:#fcd34d;color:#92400e" onmouseover="this.style.background='#fde68a';this.style.borderColor='#f59e0b'" onmouseout="this.style.background='#fef3c7';this.style.borderColor='#fcd34d'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>How to use</button><button id="btn-export" class="tb-btn" onclick="exportPdf()" title="Export current view as PDF" style="display:flex;align-items:center;gap:6px;padding:5px 12px;background:#ecfdf5;border-color:#a7f3d0;color:#065f46" onmouseover="this.style.background='#d1fae5';this.style.borderColor='#34d399'" onmouseout="this.style.background='#ecfdf5';this.style.borderColor='#a7f3d0'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export PDF</button><button id="install-btn" hidden style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#fff;background:#2563eb;border:1px solid #1d4ed8;border-radius:4px;padding:5px 12px;cursor:pointer" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">Install App</button><div class="tb-tag" id="tb-tag-locals">HFIAW · 3 Locals</div><div class="tb-dot"></div></div><button id="mobile-menu-btn" type="button" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg></button>
   </div>
   
   <div id="help-modal" onclick="if(event.target===this)toggleHelp()" style="display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:10000;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)">
@@ -220,6 +281,25 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
     <div style="margin-left:auto;font-style:italic;color:#64748b">Created by Colton Watt</div>
   </div>
 </div>
+
+<div id="mobile-menu" aria-hidden="true">
+  <div class="mm-panel">
+    <button type="button" class="mm-btn help" data-mm-action="help"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>How to use</button>
+    <button type="button" class="mm-btn exp" data-mm-action="export"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export PDF</button>
+    <button type="button" class="mm-btn inst" data-mm-action="install" style="display:none">Install App</button>
+  </div>
+</div>
+
+<div id="mobile-sheet" aria-hidden="true">
+  <div class="ms-handle" id="mobile-sheet-handle"></div>
+  <div class="ms-peek" id="mobile-sheet-peek">
+    <div class="ms-peek-county" id="mobile-sheet-county" style="display:none"></div>
+    <div class="ms-peek-empty" id="mobile-sheet-empty">Tap a county or search a city</div>
+    <div class="ms-peek-rate" id="mobile-sheet-rate" style="display:none"></div>
+  </div>
+  <div class="ms-body" id="mobile-sheet-body"></div>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 function bootApp(data){
@@ -1300,6 +1380,8 @@ function exportPdf(){
 
 // Expose functions referenced by inline onclick attributes
 window.flyTo=flyTo;window.toggleHelp=toggleHelp;window.clearResult=clearResult;window.dpToggle=dpToggle;window.doSearch=doSearch;window.clearRoute=clearRoute;window.exportPdf=exportPdf;
+window.subwattMap=map;
+window.dispatchEvent(new CustomEvent('subwatt:ready'));
 }
 
 fetch('data.json',{cache:'no-cache'})
@@ -1337,6 +1419,160 @@ window.addEventListener('appinstalled',function(){
   if(btn)btn.hidden=true;
   deferredPrompt=null;
 });
+
+/* ── Mobile layout glue (≤768px) ─────────────────────────── */
+(function(){
+  var MQ='(max-width: 768px)';
+  function isMobile(){return window.matchMedia(MQ).matches;}
+
+  function invalidateMap(){
+    try{ if(window.subwattMap)window.subwattMap.invalidateSize(); }catch(_){}
+  }
+
+  function relocateRcForViewport(){
+    var rc=document.getElementById('rc');
+    var sheetBody=document.getElementById('mobile-sheet-body');
+    var sbInner=document.querySelector('#sidebar .sb-inner');
+    if(!rc)return;
+    if(isMobile()){
+      if(sheetBody && rc.parentNode!==sheetBody)sheetBody.appendChild(rc);
+    }else{
+      if(sbInner && rc.parentNode!==sbInner)sbInner.appendChild(rc);
+    }
+  }
+
+  function updatePeek(){
+    var rc=document.getElementById('rc');
+    var county=document.getElementById('mobile-sheet-county');
+    var rate=document.getElementById('mobile-sheet-rate');
+    var empty=document.getElementById('mobile-sheet-empty');
+    if(!county||!rate||!empty)return;
+    var hasContent=rc && rc.style.display!=='none' && rc.innerHTML && rc.innerHTML.trim().length>0;
+    if(!hasContent){
+      county.style.display='none';
+      rate.style.display='none';
+      empty.style.display='block';
+      return;
+    }
+    var sbm=document.getElementById('sbm');
+    var countyText=sbm?sbm.textContent.trim():'';
+    var rateText='';
+    var pdn=rc.querySelector('.pdn');
+    if(pdn)rateText=pdn.textContent.trim();
+    if(!rateText){
+      var calcOut=rc.querySelector('#calc-out');
+      if(calcOut){
+        var m=calcOut.textContent.match(/\$\s?\d[\d,]*(?:\.\d+)?\s*\/\s*day/i);
+        if(m)rateText=m[0].replace(/\s+/g,'');
+      }
+    }
+    empty.style.display='none';
+    county.style.display='block';
+    county.textContent=countyText||'Selected location';
+    rate.style.display=rateText?'block':'none';
+    rate.textContent=rateText;
+  }
+
+  function expandSheet(){
+    var sheet=document.getElementById('mobile-sheet');
+    if(!sheet)return;
+    sheet.classList.add('mobile-sheet--expanded');
+    sheet.setAttribute('aria-hidden','false');
+    setTimeout(invalidateMap,260);
+  }
+  function collapseSheet(){
+    var sheet=document.getElementById('mobile-sheet');
+    if(!sheet)return;
+    sheet.classList.remove('mobile-sheet--expanded');
+    setTimeout(invalidateMap,260);
+  }
+  function toggleSheet(){
+    var sheet=document.getElementById('mobile-sheet');
+    if(!sheet)return;
+    if(sheet.classList.contains('mobile-sheet--expanded'))collapseSheet();
+    else expandSheet();
+  }
+
+  function openMenu(){
+    var m=document.getElementById('mobile-menu');
+    if(!m)return;
+    m.classList.add('is-open');
+    m.setAttribute('aria-hidden','false');
+    var inst=m.querySelector('[data-mm-action="install"]');
+    var src=document.getElementById('install-btn');
+    if(inst&&src)inst.style.display=src.hidden?'none':'';
+  }
+  function closeMenu(){
+    var m=document.getElementById('mobile-menu');
+    if(!m)return;
+    m.classList.remove('is-open');
+    m.setAttribute('aria-hidden','true');
+  }
+
+  function bind(){
+    var btn=document.getElementById('mobile-menu-btn');
+    var menu=document.getElementById('mobile-menu');
+    var sheet=document.getElementById('mobile-sheet');
+    var handle=document.getElementById('mobile-sheet-handle');
+    var peek=document.getElementById('mobile-sheet-peek');
+    if(btn)btn.addEventListener('click',function(e){e.stopPropagation();openMenu();});
+    if(menu){
+      menu.addEventListener('click',function(e){
+        var t=e.target.closest('[data-mm-action]');
+        if(!t){ if(e.target===menu)closeMenu(); return; }
+        var action=t.getAttribute('data-mm-action');
+        closeMenu();
+        if(action==='help'){ if(window.toggleHelp)window.toggleHelp(); }
+        else if(action==='export'){ if(window.exportPdf)window.exportPdf(); }
+        else if(action==='install'){
+          var src=document.getElementById('install-btn');
+          if(src&&!src.hidden)src.click();
+        }
+      });
+    }
+    if(handle)handle.addEventListener('click',function(e){e.stopPropagation();toggleSheet();});
+    if(peek)peek.addEventListener('click',function(e){e.stopPropagation();toggleSheet();});
+    if(sheet)sheet.addEventListener('click',function(e){e.stopPropagation();});
+
+    document.addEventListener('click',function(e){
+      if(menu&&menu.classList.contains('is-open')&&!menu.contains(e.target)&&e.target!==btn&&!(btn&&btn.contains(e.target))){
+        closeMenu();
+      }
+      if(sheet&&sheet.classList.contains('mobile-sheet--expanded')){
+        if(sheet.contains(e.target))return;
+        var topbar=document.getElementById('topbar');
+        if(topbar&&topbar.contains(e.target))collapseSheet();
+      }
+    });
+
+    window.addEventListener('resize',function(){
+      relocateRcForViewport();
+      if(!isMobile())closeMenu();
+      invalidateMap();
+    });
+  }
+
+  function init(){
+    bind();
+    relocateRcForViewport();
+
+    var rc=document.getElementById('rc');
+    if(rc&&'MutationObserver' in window){
+      var pending=false;
+      var obs=new MutationObserver(function(){
+        if(pending)return;
+        pending=true;
+        requestAnimationFrame(function(){pending=false;updatePeek();});
+      });
+      obs.observe(rc,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['style']});
+    }
+    updatePeek();
+    setTimeout(invalidateMap,50);
+  }
+
+  if(window.subwattMap)init();
+  else window.addEventListener('subwatt:ready',init,{once:true});
+})();
 </script>
 </body>
 </html>

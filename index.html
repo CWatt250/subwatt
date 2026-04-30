@@ -147,12 +147,10 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
   #mobile-menu-btn:active{background:#e2e8f0}
 
   #sidebar{display:none}
-  #mw{flex:1 1 0;min-height:0;height:calc(100vh - 48px - 80px - 26px)}
+  #mw{flex:1 1 0;min-height:0;height:calc(100vh - 48px - 80px)}
   .hud{display:none}
 
-  #statusbar{flex:0 0 26px;padding:0 10px;gap:10px;font-size:8px}
-  #statusbar > div:nth-child(2){display:none}
-  #statusbar > div:last-child{font-size:8px}
+  #statusbar{display:none}
 
   #mobile-menu{display:none;position:fixed;top:48px;left:0;right:0;bottom:0;background:rgba(15,23,42,.45);z-index:950;backdrop-filter:blur(2px)}
   #mobile-menu.is-open{display:block}
@@ -163,8 +161,8 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
   #mobile-menu .mm-btn.exp{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
   #mobile-menu .mm-btn.inst{background:#2563eb;border-color:#1d4ed8;color:#fff}
 
-  #mobile-sheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:26px;height:80px;transition:height .25s ease;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 16px rgba(15,23,42,.08);z-index:800;overflow:hidden}
-  #mobile-sheet.mobile-sheet--expanded{height:70vh}
+  #mobile-sheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:0;height:80px;transition:height .25s ease;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 16px rgba(15,23,42,.08);z-index:800;overflow:hidden}
+  #mobile-sheet.mobile-sheet--expanded{height:50vh}
   #mobile-sheet .ms-handle{width:36px;height:4px;background:#94a3b8;border-radius:2px;margin:8px auto 4px;flex-shrink:0;cursor:pointer}
   #mobile-sheet .ms-peek{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;cursor:pointer;flex-shrink:0;min-height:44px;gap:12px}
   #mobile-sheet .ms-peek-county{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
@@ -1431,13 +1429,20 @@ window.addEventListener('appinstalled',function(){
 
   function relocateRcForViewport(){
     var rc=document.getElementById('rc');
-    var sheetBody=document.getElementById('mobile-sheet-body');
     var sbInner=document.querySelector('#sidebar .sb-inner');
+    var sbl=sbInner?sbInner.querySelector(':scope > .sbl'):null;
+    var sheetBody=document.getElementById('mobile-sheet-body');
     if(!rc)return;
     if(isMobile()){
-      if(sheetBody && rc.parentNode!==sheetBody)sheetBody.appendChild(rc);
+      if(sheetBody){
+        if(sbl && sbl.parentNode!==sheetBody)sheetBody.appendChild(sbl);
+        if(rc.parentNode!==sheetBody)sheetBody.appendChild(rc);
+      }
     }else{
-      if(sbInner && rc.parentNode!==sbInner)sbInner.appendChild(rc);
+      if(sbInner){
+        if(sbl && sbl.parentNode!==sbInner)sbInner.insertBefore(sbl,sbInner.firstChild);
+        if(rc.parentNode!==sbInner)sbInner.appendChild(rc);
+      }
     }
   }
 
@@ -1457,14 +1462,10 @@ window.addEventListener('appinstalled',function(){
     var sbm=document.getElementById('sbm');
     var countyText=sbm?sbm.textContent.trim():'';
     var rateText='';
-    var pdn=rc.querySelector('.pdn');
-    if(pdn)rateText=pdn.textContent.trim();
-    if(!rateText){
-      var calcOut=rc.querySelector('#calc-out');
-      if(calcOut){
-        var m=calcOut.textContent.match(/\$\s?\d[\d,]*(?:\.\d+)?\s*\/\s*day/i);
-        if(m)rateText=m[0].replace(/\s+/g,'');
-      }
+    var calcOut=rc.querySelector('#calc-out');
+    if(calcOut && calcOut.textContent){
+      var m=calcOut.textContent.match(/\$\s?(\d[\d,]*(?:\.\d+)?)/);
+      if(m)rateText='$'+m[1]+'/day';
     }
     empty.style.display='none';
     county.style.display='block';

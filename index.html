@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <title>SubWatt — Travel Rate Estimator</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
@@ -132,7 +132,12 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
 /* ── Mobile (≤768px) ─────────────────────────────────────────
    Everything mobile lives inside this block so desktop layout is byte-identical. */
 @media (max-width: 768px){
-  #topbar{flex:0 0 48px;padding:0 10px}
+  /* Use dynamic viewport height so iOS Safari chrome doesn't clip our layout */
+  html,body{height:100vh;height:100dvh}
+  #shell{height:100vh;height:100dvh}
+
+  /* Topbar — pad below the iPhone notch / dynamic island */
+  #topbar{flex:0 0 auto;min-height:48px;padding:env(safe-area-inset-top, 0px) 10px 0;height:calc(48px + env(safe-area-inset-top, 0px))}
   #topbar .tb-sep{display:none}
   #topbar .tb-right{display:none}
   #topbar .tb-logo{margin-right:8px}
@@ -147,12 +152,13 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
   #mobile-menu-btn:active{background:#e2e8f0}
 
   #sidebar{display:none}
-  #mw{flex:1 1 0;min-height:0;height:calc(100vh - 48px - 80px)}
+  /* Map fills space between topbar and the collapsed sheet (sheet overlays bottom) */
+  #mw{flex:1 1 0;min-height:0;height:calc(100vh - 48px - 80px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));height:calc(100dvh - 48px - 80px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px))}
   .hud{display:none}
 
   #statusbar{display:none}
 
-  #mobile-menu{display:none;position:fixed;top:48px;left:0;right:0;bottom:0;background:rgba(15,23,42,.45);z-index:950;backdrop-filter:blur(2px)}
+  #mobile-menu{display:none;position:fixed;top:calc(48px + env(safe-area-inset-top, 0px));left:0;right:0;bottom:0;background:rgba(15,23,42,.45);z-index:950;backdrop-filter:blur(2px)}
   #mobile-menu.is-open{display:block}
   #mobile-menu .mm-panel{background:#fff;padding:10px;display:flex;flex-direction:column;gap:8px;border-bottom:1px solid #e2e8f0;box-shadow:0 6px 16px rgba(15,23,42,.12)}
   #mobile-menu .mm-btn{min-height:48px;width:100%;padding:0 14px;display:flex;align-items:center;gap:10px;border-radius:8px;border:1px solid #e2e8f0;background:#fff;font-family:'Space Mono',monospace;font-size:12px;font-weight:700;color:#0f172a;cursor:pointer;text-align:left}
@@ -161,12 +167,13 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
   #mobile-menu .mm-btn.exp{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
   #mobile-menu .mm-btn.inst{background:#2563eb;border-color:#1d4ed8;color:#fff}
 
-  #mobile-sheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:0;height:80px;transition:height .25s ease;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 16px rgba(15,23,42,.08);z-index:800;overflow:hidden}
-  #mobile-sheet.mobile-sheet--expanded{height:50vh}
+  /* Bottom sheet — anchored flush at viewport bottom, with home-indicator safe-area */
+  #mobile-sheet{display:flex;flex-direction:column;position:fixed;left:0;right:0;bottom:0;height:calc(80px + env(safe-area-inset-bottom, 0px));padding-bottom:env(safe-area-inset-bottom, 0px);transition:height .25s ease;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -4px 16px rgba(15,23,42,.08);z-index:800;overflow:hidden}
+  #mobile-sheet.mobile-sheet--expanded{height:calc(35vh + env(safe-area-inset-bottom, 0px))}
   #mobile-sheet .ms-handle{width:36px;height:4px;background:#94a3b8;border-radius:2px;margin:8px auto 4px;flex-shrink:0;cursor:pointer}
-  #mobile-sheet .ms-peek{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;cursor:pointer;flex-shrink:0;min-height:44px;gap:12px}
+  #mobile-sheet .ms-peek{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;cursor:pointer;flex-shrink:0;min-height:48px;gap:12px}
   #mobile-sheet .ms-peek-county{font-family:'Space Mono',monospace;font-size:13px;font-weight:700;color:#0f172a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-  #mobile-sheet .ms-peek-rate{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:#0369a1;flex-shrink:0}
+  #mobile-sheet .ms-peek-rate{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:#2563EB;flex-shrink:0;text-align:right;line-height:1}
   #mobile-sheet .ms-peek-empty{font-family:'DM Sans',sans-serif;font-size:12px;color:#94a3b8;flex:1}
   #mobile-sheet .ms-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0;padding-bottom:12px}
   #mobile-sheet:not(.mobile-sheet--expanded) .ms-body{display:none}
@@ -174,8 +181,14 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
   #mobile-sheet button{min-height:36px}
   #mobile-sheet .lrow,#mobile-sheet .wr{padding-top:10px;padding-bottom:10px}
 
+  /* Hero price block — first thing visible inside the expanded sheet */
+  #mobile-sheet-hero{display:none;padding:14px 16px 12px;border-bottom:1px solid #f1f5f9;background:#fff}
+  #mobile-sheet-hero.has-content{display:block}
+  #mobile-sheet-hero .hero-rate{font-family:'Space Mono',monospace;font-size:28px;font-weight:700;color:#2563EB;line-height:1.05}
+  #mobile-sheet-hero .hero-zone{font-size:11px;color:#94a3b8;margin-top:3px;letter-spacing:.3px}
+
   /* Search dropdown — full viewport width and readable so iOS Safari doesn't auto-zoom */
-  #search-dd{position:fixed !important;top:50px !important;left:6px !important;right:6px !important;font-size:14px !important;max-height:60vh;overflow-y:auto}
+  #search-dd{position:fixed !important;top:calc(50px + env(safe-area-inset-top, 0px)) !important;left:6px !important;right:6px !important;font-size:14px !important;max-height:60vh;overflow-y:auto}
   #search-dd > div{padding:11px 12px !important;font-size:13px}
 
   /* Help modal full-screen on mobile */
@@ -295,7 +308,12 @@ body{font-family:'DM Sans',sans-serif;background:#f8fafc;color:#0f172a}
     <div class="ms-peek-empty" id="mobile-sheet-empty">Tap a county or search a city</div>
     <div class="ms-peek-rate" id="mobile-sheet-rate" style="display:none"></div>
   </div>
-  <div class="ms-body" id="mobile-sheet-body"></div>
+  <div class="ms-body" id="mobile-sheet-body">
+    <div id="mobile-sheet-hero">
+      <div class="hero-rate" id="mobile-sheet-hero-rate"></div>
+      <div class="hero-zone" id="mobile-sheet-hero-zone"></div>
+    </div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -1451,12 +1469,16 @@ window.addEventListener('appinstalled',function(){
     var county=document.getElementById('mobile-sheet-county');
     var rate=document.getElementById('mobile-sheet-rate');
     var empty=document.getElementById('mobile-sheet-empty');
+    var hero=document.getElementById('mobile-sheet-hero');
+    var heroRate=document.getElementById('mobile-sheet-hero-rate');
+    var heroZone=document.getElementById('mobile-sheet-hero-zone');
     if(!county||!rate||!empty)return;
     var hasContent=rc && rc.style.display!=='none' && rc.innerHTML && rc.innerHTML.trim().length>0;
     if(!hasContent){
       county.style.display='none';
       rate.style.display='none';
       empty.style.display='block';
+      if(hero)hero.classList.remove('has-content');
       return;
     }
     var sbm=document.getElementById('sbm');
@@ -1472,6 +1494,28 @@ window.addEventListener('appinstalled',function(){
     county.textContent=countyText||'Selected location';
     rate.style.display=rateText?'block':'none';
     rate.textContent=rateText;
+
+    if(hero&&heroRate&&heroZone){
+      if(rateText){
+        heroRate.textContent=rateText;
+        var zoneText='';
+        if(calcOut){
+          var labelEl=calcOut.querySelector(':scope > div > div');
+          if(labelEl)zoneText=labelEl.textContent.trim();
+        }
+        var miEl=rc.querySelector('#calc-mi');
+        var miles=miEl&&miEl.value?parseFloat(miEl.value):null;
+        var subtitle=zoneText;
+        if(miles!=null&&!isNaN(miles)){
+          subtitle=subtitle?subtitle+' · '+miles+' mi':miles+' mi';
+        }
+        heroZone.textContent=subtitle;
+        heroZone.style.display=subtitle?'block':'none';
+        hero.classList.add('has-content');
+      } else {
+        hero.classList.remove('has-content');
+      }
+    }
   }
 
   function expandSheet(){

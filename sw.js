@@ -1,6 +1,6 @@
 // SubWatt service worker
 // Bump CACHE_NAME when shipping new assets so clients pick them up
-const CACHE_NAME = 'subwatt-v15';
+const CACHE_NAME = 'subwatt-v16';
 const TILE_CACHE = 'subwatt-tiles-v1';
 const MAX_TILES = 500;
 
@@ -8,9 +8,9 @@ const PRECACHE_URLS = [
   'index.html',
   'manifest.json',
   'data.json',
-  'favicon.svg?v=2',
-  'icons/icon-192-v2.png',
-  'icons/icon-512-v2.png',
+  'favicon.svg?v=4',
+  'icons/icon-192-v3.png',
+  'icons/icon-512-v3.png',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
   'https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap'
